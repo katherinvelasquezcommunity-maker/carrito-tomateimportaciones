@@ -152,25 +152,6 @@ button{
   margin-top:20px;
 }
 
-.comparacion{
-  background:white;
-  border:1px solid #d4af37;
-  border-radius:10px;
-  padding:15px;
-  margin-top:15px;
-  text-align:center;
-}
-
-.comparacion div{
-  margin:6px 0;
-}
-
-.comparacion .ahorro{
-  color:#9b0000;
-  font-size:20px;
-  font-weight:bold;
-}
-
 .formulario{
   background:white;
   padding:20px;
@@ -273,8 +254,6 @@ button{
 <div id="zonaCompra" class="oculto">
 
   <div id="total" class="total"></div>
-
-  <div id="comparacion"></div>
 
   <button class="btn-vaciar" onclick="vaciarCarrito()">
     VACIAR CARRITO
@@ -457,17 +436,12 @@ function renderizarCarrito(){
   const estadoMayorista =
     document.getElementById("estadoMayorista");
 
-  const comparacion =
-    document.getElementById("comparacion");
-
   if(carrito.length === 0){
 
     contenedor.innerHTML =
       '<div class="vacio">Tu carrito está vacío.</div>';
 
     estadoMayorista.innerHTML = "";
-
-    comparacion.innerHTML = "";
 
     zonaCompra.classList.add("oculto");
 
@@ -506,23 +480,6 @@ function renderizarCarrito(){
       </div>
     `;
 
-    comparacion.innerHTML = `
-      <div>
-        Precio normal:
-        <strong>Bs ${totales.unitario.toFixed(2)}</strong>
-      </div>
-
-      <div>
-        Precio mayorista:
-        <strong>Bs ${totales.mayorista.toFixed(2)}</strong>
-      </div>
-
-      <div class="ahorro">
-        🎉 Ahorro total:
-        Bs ${ahorro.toFixed(2)}
-      </div>
-    `;
-
   }else{
 
     const faltan =
@@ -538,9 +495,6 @@ function renderizarCarrito(){
 
       </div>
     `;
-
-    /* SIN MENSAJE DEBAJO DEL TOTAL */
-    comparacion.innerHTML = "";
 
   }
 
