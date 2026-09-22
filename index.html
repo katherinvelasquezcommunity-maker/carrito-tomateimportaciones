@@ -518,7 +518,7 @@ function renderizarCarrito(){
       </div>
 
       <div class="ahorro">
-        Ahorro total:
+        🎉 Ahorro total:
         Bs ${ahorro.toFixed(2)}
       </div>
     `;
@@ -539,12 +539,8 @@ function renderizarCarrito(){
       </div>
     `;
 
-    comparacion.innerHTML = `
-      <div>
-        Si llevas 3 unidades o más,
-        se aplicará automáticamente el precio mayorista.
-      </div>
-    `;
+    /* SIN MENSAJE DEBAJO DEL TOTAL */
+    comparacion.innerHTML = "";
 
   }
 
