@@ -55,6 +55,28 @@ h2{
   font-weight:bold;
 }
 
+.activado{
+  background:#e8f5e9;
+  border:2px solid #2e7d32;
+  color:#1b5e20;
+  padding:18px;
+  border-radius:12px;
+  text-align:center;
+  margin:20px 0;
+  font-weight:bold;
+}
+
+.activado .titulo{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.activado .ahorro{
+  color:#9b0000;
+  font-size:20px;
+  margin-top:8px;
+}
+
 .producto{
   background:white;
   border:1px solid #ddd;
@@ -74,6 +96,11 @@ h2{
 
 .precio-mayorista{
   color:#9b0000;
+  font-weight:bold;
+}
+
+.precio-activado{
+  color:#2e7d32;
   font-weight:bold;
 }
 
@@ -123,6 +150,25 @@ button{
   font-size:22px;
   font-weight:bold;
   margin-top:20px;
+}
+
+.comparacion{
+  background:white;
+  border:1px solid #d4af37;
+  border-radius:10px;
+  padding:15px;
+  margin-top:15px;
+  text-align:center;
+}
+
+.comparacion div{
+  margin:6px 0;
+}
+
+.comparacion .ahorro{
+  color:#9b0000;
+  font-size:20px;
+  font-weight:bold;
 }
 
 .formulario{
@@ -220,11 +266,15 @@ button{
   y se aplicará automáticamente el precio mayorista.
 </div>
 
+<div id="estadoMayorista"></div>
+
 <div id="carrito"></div>
 
 <div id="zonaCompra" class="oculto">
 
   <div id="total" class="total"></div>
+
+  <div id="comparacion"></div>
 
   <button class="btn-vaciar" onclick="vaciarCarrito()">
     VACIAR CARRITO
@@ -301,9 +351,6 @@ const CLAVE_CARRITO = "tomate_carrito";
 
 const NUMERO_WHATSAPP = "59163336796";
 
-const URL_PRODUCTOS =
-"https://sites.google.com/view/tomate-importaciones/productos";
-
 let carrito = JSON.parse(
   localStorage.getItem(CLAVE_CARRITO) || "[]"
 );
@@ -315,9 +362,11 @@ function obtenerProductoInicial(){
   );
 
   const nombre = parametros.get("nombre");
+
   const unitario = Number(
     parametros.get("unitario")
   );
+
   const mayorista = Number(
     parametros.get("mayorista")
   );
@@ -375,6 +424,28 @@ function calcularCantidadTotal(){
 
 }
 
+function calcularTotales(){
+
+  let totalUnitario = 0;
+  let totalMayorista = 0;
+
+  carrito.forEach(producto => {
+
+    totalUnitario +=
+      producto.unitario * producto.cantidad;
+
+    totalMayorista +=
+      producto.mayorista * producto.cantidad;
+
+  });
+
+  return {
+    unitario: totalUnitario,
+    mayorista: totalMayorista
+  };
+
+}
+
 function renderizarCarrito(){
 
   const contenedor =
@@ -383,10 +454,20 @@ function renderizarCarrito(){
   const zonaCompra =
     document.getElementById("zonaCompra");
 
+  const estadoMayorista =
+    document.getElementById("estadoMayorista");
+
+  const comparacion =
+    document.getElementById("comparacion");
+
   if(carrito.length === 0){
 
     contenedor.innerHTML =
       '<div class="vacio">Tu carrito está vacío.</div>';
+
+    estadoMayorista.innerHTML = "";
+
+    comparacion.innerHTML = "";
 
     zonaCompra.classList.add("oculto");
 
@@ -398,13 +479,80 @@ function renderizarCarrito(){
   const cantidadTotal =
     calcularCantidadTotal();
 
+  const usaMayorista =
+    cantidadTotal >= 3;
+
+  const totales =
+    calcularTotales();
+
+  const ahorro =
+    totales.unitario - totales.mayorista;
+
+  if(usaMayorista){
+
+    estadoMayorista.innerHTML = `
+      <div class="activado">
+
+        <div class="titulo">
+          🏷️ ¡PRECIO MAYORISTA ACTIVADO!
+        </div>
+
+        Tu compra tiene ${cantidadTotal} unidades.
+
+        <div class="ahorro">
+          🎉 ¡Estás ahorrando Bs ${ahorro.toFixed(2)}!
+        </div>
+
+      </div>
+    `;
+
+    comparacion.innerHTML = `
+      <div>
+        Precio normal:
+        <strong>Bs ${totales.unitario.toFixed(2)}</strong>
+      </div>
+
+      <div>
+        Precio mayorista:
+        <strong>Bs ${totales.mayorista.toFixed(2)}</strong>
+      </div>
+
+      <div class="ahorro">
+        Ahorro total:
+        Bs ${ahorro.toFixed(2)}
+      </div>
+    `;
+
+  }else{
+
+    const faltan =
+      3 - cantidadTotal;
+
+    estadoMayorista.innerHTML = `
+      <div class="mensaje-mayorista">
+
+        🔔 Te faltan
+        <strong>${faltan}</strong>
+        unidad${faltan === 1 ? "" : "es"}
+        para activar el precio mayorista.
+
+      </div>
+    `;
+
+    comparacion.innerHTML = `
+      <div>
+        Si llevas 3 unidades o más,
+        se aplicará automáticamente el precio mayorista.
+      </div>
+    `;
+
+  }
+
   let html = "";
-  let total = 0;
+
+  let totalAplicado = 0;
 
   carrito.forEach((producto,index)=>{
-
-    const usaMayorista =
-      cantidadTotal >= 3;
 
     const precioAplicado =
       usaMayorista
@@ -414,7 +562,7 @@ function renderizarCarrito(){
     const subtotal =
       precioAplicado * producto.cantidad;
 
-    total += subtotal;
+    totalAplicado += subtotal;
 
     html += `
       <div class="producto">
@@ -431,9 +579,22 @@ function renderizarCarrito(){
           Bs ${producto.mayorista.toFixed(2)}
         </div>
 
-        <div>
-          Precio aplicado:
-          <strong>Bs ${precioAplicado.toFixed(2)}</strong>
+        <div class="${
+          usaMayorista
+          ? "precio-activado"
+          : ""
+        }">
+
+          ${
+            usaMayorista
+            ? "🏷️ Precio mayorista aplicado:"
+            : "Precio aplicado:"
+          }
+
+          <strong>
+            Bs ${precioAplicado.toFixed(2)}
+          </strong>
+
         </div>
 
         <div>
@@ -475,7 +636,7 @@ function renderizarCarrito(){
   contenedor.innerHTML = html;
 
   document.getElementById("total").innerHTML =
-    "TOTAL: Bs " + total.toFixed(2);
+    "TOTAL: Bs " + totalAplicado.toFixed(2);
 
 }
 
@@ -680,8 +841,19 @@ function finalizarPedido(){
 
   if(usaMayorista){
 
+    const totales =
+      calcularTotales();
+
+    const ahorro =
+      totales.unitario - totales.mayorista;
+
     mensaje +=
-      "🏷️ *Se aplicó precio mayorista*%0A";
+      "🏷️ *PRECIO MAYORISTA ACTIVADO*%0A";
+
+    mensaje +=
+      "💸 *AHORRO: Bs " +
+      ahorro.toFixed(2) +
+      "*%0A";
 
   }else{
 
