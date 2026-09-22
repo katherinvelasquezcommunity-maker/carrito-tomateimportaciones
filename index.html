@@ -167,8 +167,7 @@ button{
   margin-bottom:5px;
 }
 
-.formulario input,
-.formulario select{
+.formulario input{
   width:100%;
   box-sizing:border-box;
   padding:12px;
@@ -264,28 +263,36 @@ button{
     <h2>Datos del cliente</h2>
 
     <label>Nombre del cliente</label>
-    <input type="text" id="nombreCliente" placeholder="Escribe tu nombre">
+    <input
+      type="text"
+      id="nombreCliente"
+      placeholder="Escribe tu nombre">
 
     <label>WhatsApp</label>
-    <input type="tel" id="whatsappCliente" placeholder="Ej.: 70000000">
+    <input
+      type="tel"
+      id="whatsappCliente"
+      placeholder="Ej.: 70000000">
 
     <label>Método de entrega</label>
 
     <div class="opciones-entrega">
 
       <label>
-        <input type="radio"
-               name="entrega"
-               value="Delivery"
-               onchange="mostrarDelivery()">
+        <input
+          type="radio"
+          name="entrega"
+          value="Delivery"
+          onchange="mostrarDelivery()">
         Delivery
       </label>
 
       <label>
-        <input type="radio"
-               name="entrega"
-               value="Entrega en tienda"
-               onchange="mostrarDelivery()">
+        <input
+          type="radio"
+          name="entrega"
+          value="Entrega en tienda"
+          onchange="mostrarDelivery()">
         Entrega en tienda
       </label>
 
@@ -294,14 +301,16 @@ button{
     <div id="datosDelivery" class="oculto">
 
       <label>Dirección</label>
-      <input type="text"
-             id="direccion"
-             placeholder="Escribe tu dirección">
+      <input
+        type="text"
+        id="direccion"
+        placeholder="Escribe tu dirección">
 
       <label>Referencia</label>
-      <input type="text"
-             id="referencia"
-             placeholder="Ej.: cerca de...">
+      <input
+        type="text"
+        id="referencia"
+        placeholder="Ej.: cerca de...">
 
     </div>
 
@@ -309,12 +318,15 @@ button{
 
   <div class="botones-finales">
 
-    <a class="btn-seguir"
-       href="https://sites.google.com/view/tomate-importaciones/productos">
-       SEGUIR COMPRANDO
+    <a
+      class="btn-seguir"
+      href="https://sites.google.com/view/tomate-importaciones/productos">
+      SEGUIR COMPRANDO
     </a>
 
-    <button class="btn-comprar" onclick="finalizarPedido()">
+    <button
+      class="btn-comprar"
+      onclick="finalizarPedido()">
       FINALIZAR PEDIDO
     </button>
 
@@ -419,8 +431,8 @@ function calcularTotales(){
   });
 
   return {
-    unitario: totalUnitario,
-    mayorista: totalMayorista
+    unitario:totalUnitario,
+    mayorista:totalMayorista
   };
 
 }
@@ -471,10 +483,13 @@ function renderizarCarrito(){
           🏷️ ¡PRECIO MAYORISTA ACTIVADO!
         </div>
 
-        Tu compra tiene ${cantidadTotal} unidades.
+        Tu compra tiene
+        ${cantidadTotal}
+        unidades.
 
         <div class="ahorro">
-          🎉 ¡Estás ahorrando Bs ${ahorro.toFixed(2)}!
+          🎉 ¡Estás ahorrando Bs
+          ${ahorro.toFixed(2)}!
         </div>
 
       </div>
@@ -521,7 +536,9 @@ function renderizarCarrito(){
 
         <div class="precio">
           Precio unitario:
-          <strong>Bs ${producto.unitario.toFixed(2)}</strong>
+          <strong>
+            Bs ${producto.unitario.toFixed(2)}
+          </strong>
         </div>
 
         <div class="precio precio-mayorista">
@@ -549,7 +566,9 @@ function renderizarCarrito(){
 
         <div>
           Subtotal:
-          <strong>Bs ${subtotal.toFixed(2)}</strong>
+          <strong>
+            Bs ${subtotal.toFixed(2)}
+          </strong>
         </div>
 
         <div class="controles">
@@ -586,7 +605,8 @@ function renderizarCarrito(){
   contenedor.innerHTML = html;
 
   document.getElementById("total").innerHTML =
-    "TOTAL: Bs " + totalAplicado.toFixed(2);
+    "TOTAL: Bs " +
+    totalAplicado.toFixed(2);
 
 }
 
@@ -640,7 +660,10 @@ function mostrarDelivery(){
   const datos =
     document.getElementById("datosDelivery");
 
-  if(opcion && opcion.value === "Delivery"){
+  if(
+    opcion &&
+    opcion.value === "Delivery"
+  ){
 
     datos.classList.remove("oculto");
 
@@ -663,10 +686,16 @@ function finalizarPedido(){
   }
 
   const nombre =
-    document.getElementById("nombreCliente").value.trim();
+    document
+      .getElementById("nombreCliente")
+      .value
+      .trim();
 
   const whatsapp =
-    document.getElementById("whatsappCliente").value.trim();
+    document
+      .getElementById("whatsappCliente")
+      .value
+      .trim();
 
   const opcion =
     document.querySelector(
@@ -675,7 +704,9 @@ function finalizarPedido(){
 
   if(!nombre){
 
-    alert("Por favor, coloca tu nombre.");
+    alert(
+      "Por favor, coloca tu nombre."
+    );
 
     return;
 
@@ -683,7 +714,9 @@ function finalizarPedido(){
 
   if(!whatsapp){
 
-    alert("Por favor, coloca tu número de WhatsApp.");
+    alert(
+      "Por favor, coloca tu número de WhatsApp."
+    );
 
     return;
 
@@ -691,7 +724,9 @@ function finalizarPedido(){
 
   if(!opcion){
 
-    alert("Por favor, selecciona el método de entrega.");
+    alert(
+      "Por favor, selecciona el método de entrega."
+    );
 
     return;
 
@@ -700,17 +735,27 @@ function finalizarPedido(){
   let direccion = "";
   let referencia = "";
 
-  if(opcion.value === "Delivery"){
+  if(
+    opcion.value === "Delivery"
+  ){
 
     direccion =
-      document.getElementById("direccion").value.trim();
+      document
+        .getElementById("direccion")
+        .value
+        .trim();
 
     referencia =
-      document.getElementById("referencia").value.trim();
+      document
+        .getElementById("referencia")
+        .value
+        .trim();
 
     if(!direccion){
 
-      alert("Por favor, coloca tu dirección.");
+      alert(
+        "Por favor, coloca tu dirección."
+      );
 
       return;
 
@@ -742,7 +787,9 @@ function finalizarPedido(){
     encodeURIComponent(opcion.value) +
     "%0A";
 
-  if(opcion.value === "Delivery"){
+  if(
+    opcion.value === "Delivery"
+  ){
 
     mensaje +=
       "📍 *Dirección:* " +
@@ -760,7 +807,8 @@ function finalizarPedido(){
 
   }
 
-  mensaje += "%0A🛍️ *PRODUCTOS:*%0A";
+  mensaje +=
+    "%0A🛍️ *PRODUCTOS:*%0A";
 
   let total = 0;
 
@@ -795,7 +843,8 @@ function finalizarPedido(){
       calcularTotales();
 
     const ahorro =
-      totales.unitario - totales.mayorista;
+      totales.unitario -
+      totales.mayorista;
 
     mensaje +=
       "🏷️ *PRECIO MAYORISTA ACTIVADO*%0A";
