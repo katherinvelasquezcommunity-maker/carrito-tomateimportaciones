@@ -1,54 +1,102 @@
 <!DOCTYPE html>
 
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Precio - TOMATE IMPORTACIONES</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
+rel="stylesheet"
+>
+
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
+
+html,
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  background: transparent !important;
+  overflow: hidden !important;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
+  font-family: "Merriweather", serif;
+}
+
+.precios {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
   text-align: center;
 }
 
 .precio {
-  line-height: 18px;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  font-family: "Merriweather", serif;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 700;
+
+  color: #000000;
+
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .numero {
-  color: red;
+  color: #d71920;
+  font-weight: 700;
 }
+
 </style>
 
 </head>
 
 <body>
 
-<div class="precio">
-  PRECIO UNITARIO: <span class="numero" id="unitario"></span>
-</div>
+<div class="precios">
 
-<div class="precio">
-  PRECIO POR MAYOR: <span class="numero" id="mayorista"></span>
+  <div class="precio">
+    PRECIO UNITARIO:
+    <span class="numero" id="unitario"></span>
+  </div>
+
+  <div class="precio">
+    PRECIO POR MAYOR:
+    <span class="numero" id="mayorista"></span>
+  </div>
+
 </div>
 
 <script>
+
 const datos = new URLSearchParams(window.location.search);
 
+const unitario = datos.get("unitario") || "";
+
+const mayorista = datos.get("mayorista") || "";
+
 document.getElementById("unitario").textContent =
-  "Bs.  + (datos.get("unitario") || );
+  " Bs. " + unitario;
 
 document.getElementById("mayorista").textContent =
-  "Bs.  + (datos.get("mayorista") || );
+  " Bs. " + mayorista;
+
 </script>
 
 </body>
+
 </html>
