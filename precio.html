@@ -1,97 +1,54 @@
 <!DOCTYPE html>
 
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Precio</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
-    rel="stylesheet"
-  >
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
 
-  <style>
+.precio {
+  line-height: 18px;
+}
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      background: transparent;
-      overflow: hidden;
-    }
-
-    body {
-      font-family: "Merriweather", serif;
-    }
-
-    .precios {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      text-align: center;
-    }
-
-    .precio-linea {
-      margin: 0;
-      padding: 0;
-
-      font-family: "Merriweather", serif;
-      font-size: 14px;
-      line-height: 16px;
-      font-weight: 700;
-
-      color: #000000;
-
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-
-    .precio-numero {
-      color: #d71920;
-      font-weight: 700;
-    }
-
-  </style>
+.numero {
+  color: red;
+}
+</style>
 
 </head>
 
 <body>
 
-  <div class="precios">
-
-<div class="precio-linea">
-  PRECIO UNITARIO:
-  <span class="precio-numero" id="precioUnitario"></span>
+<div class="precio">
+  PRECIO UNITARIO: <span class="numero" id="unitario"></span>
 </div>
 
-<div class="precio-linea">
-  PRECIO POR MAYOR:
-  <span class="precio-numero" id="precioMayorista"></span>
+<div class="precio">
+  PRECIO POR MAYOR: <span class="numero" id="mayorista"></span>
 </div>
 
-  </div>
+<script>
+const datos = new URLSearchParams(window.location.search);
 
-  <script>
+document.getElementById("unitario").textContent =
+  "Bs. " + (datos.get("unitario") || "");
 
-    const parametros = new URLSearchParams(window.location.search);
-
-    const unitario = parametros.get("unitario") || "";
-    const mayorista = parametros.get("mayorista") || "";
-
-    document.getElementById("precioUnitario").textContent =
-      "Bs. " + unitario;
-
-    document.getElementById("precioMayorista").textContent =
-      "Bs. " + mayorista;
-
-  </script>
+document.getElementById("mayorista").textContent =
+  "Bs. " + (datos.get("mayorista") || "");
+</script>
 
 </body>
-
 </html>
