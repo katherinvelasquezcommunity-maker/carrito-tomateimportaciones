@@ -26,10 +26,10 @@
       margin: 0 !important;
       padding: 0 !important;
       width: 100%;
-      height: auto;
-      min-height: 0;
+      height: 28px;
+      min-height: 28px;
       background: transparent !important;
-      overflow: hidden;
+      overflow: hidden !important;
     }
 
     body {
@@ -38,20 +38,19 @@
 
     .precios {
       width: 100%;
+      height: 28px;
+
       margin: 0 !important;
       padding: 0 !important;
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      gap: 0;
+      display: block;
 
       background: transparent !important;
     }
 
     .precio-linea {
       width: 100%;
+      height: 14px;
 
       margin: 0 !important;
       padding: 0 !important;
@@ -60,13 +59,14 @@
 
       font-family: "Merriweather", serif;
       font-size: 14px;
-      line-height: 1.15;
+      line-height: 14px;
       font-weight: 700;
 
       color: #000000;
 
       background: transparent !important;
       border: none !important;
+      outline: none !important;
       box-shadow: none !important;
     }
 
@@ -84,25 +84,30 @@
 
   <div class="precios">
 
-```
+
 <div class="precio-linea">
   PRECIO UNITARIO:
-  <span class="precio-numero" id="precioUnitario"></span>
+  <span
+    class="precio-numero"
+    id="precioUnitario"
+  ></span>
 </div>
 
 <div class="precio-linea">
   PRECIO POR MAYOR:
-  <span class="precio-numero" id="precioMayorista"></span>
+  <span
+    class="precio-numero"
+    id="precioMayorista"
+  ></span>
 </div>
-```
+
 
   </div>
 
   <script>
 
-    const parametros = new URLSearchParams(
-      window.location.search
-    );
+    const parametros =
+      new URLSearchParams(window.location.search);
 
     const unitario =
       parametros.get("unitario") || "";
