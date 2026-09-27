@@ -3,12 +3,10 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Precio - TOMATE IMPORTACIONES</title>
+  <title>Precio</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
@@ -17,19 +15,13 @@
 
   <style>
 
-    * {
-      box-sizing: border-box;
-    }
-
     html,
     body {
-      margin: 0 !important;
-      padding: 0 !important;
+      margin: 0;
+      padding: 0;
       width: 100%;
-      height: 28px;
-      min-height: 28px;
-      background: transparent !important;
-      overflow: hidden !important;
+      background: transparent;
+      overflow: hidden;
     }
 
     body {
@@ -38,42 +30,31 @@
 
     .precios {
       width: 100%;
-      height: 28px;
-
-      margin: 0 !important;
-      padding: 0 !important;
-
-      display: block;
-
-      background: transparent !important;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      text-align: center;
     }
 
     .precio-linea {
-      width: 100%;
-      height: 14px;
-
-      margin: 0 !important;
-      padding: 0 !important;
-
-      text-align: center;
+      margin: 0;
+      padding: 0;
 
       font-family: "Merriweather", serif;
       font-size: 14px;
-      line-height: 14px;
+      line-height: 16px;
       font-weight: 700;
 
       color: #000000;
 
-      background: transparent !important;
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
+      background: transparent;
+      border: none;
+      box-shadow: none;
     }
 
     .precio-numero {
       color: #d71920;
       font-weight: 700;
-      white-space: nowrap;
     }
 
   </style>
@@ -84,36 +65,24 @@
 
   <div class="precios">
 
-
 <div class="precio-linea">
   PRECIO UNITARIO:
-  <span
-    class="precio-numero"
-    id="precioUnitario"
-  ></span>
+  <span class="precio-numero" id="precioUnitario"></span>
 </div>
 
 <div class="precio-linea">
   PRECIO POR MAYOR:
-  <span
-    class="precio-numero"
-    id="precioMayorista"
-  ></span>
+  <span class="precio-numero" id="precioMayorista"></span>
 </div>
-
 
   </div>
 
   <script>
 
-    const parametros =
-      new URLSearchParams(window.location.search);
+    const parametros = new URLSearchParams(window.location.search);
 
-    const unitario =
-      parametros.get("unitario") || "";
-
-    const mayorista =
-      parametros.get("mayorista") || "";
+    const unitario = parametros.get("unitario") || "";
+    const mayorista = parametros.get("mayorista") || "";
 
     document.getElementById("precioUnitario").textContent =
       "Bs. " + unitario;
