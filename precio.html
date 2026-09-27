@@ -6,6 +6,13 @@
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link
+href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap"
+rel="stylesheet"
+>
+
 <style>
 
 html,
@@ -34,7 +41,7 @@ body {
   color: #000000;
 }
 
-.rojo {
+.numero {
   font-family: "Merriweather", Georgia, serif;
   font-size: 14px;
   font-weight: 700;
@@ -48,12 +55,29 @@ body {
 <body>
 
 <div class="precio">
-  PRECIO UNITARIO: <span class="rojo">Bs. 170</span>
+  PRECIO UNITARIO:
+  <span class="numero" id="unitario"></span>
 </div>
 
 <div class="precio">
-  PRECIO POR MAYOR: <span class="rojo">Bs. 142</span>
+  PRECIO POR MAYOR:
+  <span class="numero" id="mayorista"></span>
 </div>
+
+<script>
+
+const parametros = new URLSearchParams(window.location.search);
+
+const unitario = parametros.get("unitario");
+const mayorista = parametros.get("mayorista");
+
+document.getElementById("unitario").textContent =
+  unitario ? " Bs. " + unitario : "";
+
+document.getElementById("mayorista").textContent =
+  mayorista ? " Bs. " + mayorista : "";
+
+</script>
 
 </body>
 
