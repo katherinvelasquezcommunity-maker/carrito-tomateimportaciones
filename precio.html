@@ -1,64 +1,34 @@
 <!DOCTYPE html>
 
 <html lang="es">
-
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Precio - TOMATE IMPORTACIONES</title>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
-rel="stylesheet"
->
 
 <style>
 
-html,
-body {
-  margin: 0 !important;
-  padding: 0 !important;
+html, body {
+  margin: 0;
+  padding: 0;
   width: 100%;
-  background: transparent !important;
-  overflow: hidden !important;
+  background: transparent;
 }
 
 body {
-  font-family: "Merriweather", serif;
-}
-
-.precios {
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
   text-align: center;
 }
 
 .precio {
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-
-  font-family: "Merriweather", serif;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: 700;
-
-  color: #000000;
-
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+  line-height: 18px;
 }
 
 .numero {
-  color: #d71920;
-  font-weight: 700;
+  color: red;
+  font-weight: bold;
 }
 
 </style>
@@ -67,36 +37,15 @@ body {
 
 <body>
 
-<div class="precios">
-
-  <div class="precio">
-    PRECIO UNITARIO:
-    <span class="numero" id="unitario"></span>
-  </div>
-
-  <div class="precio">
-    PRECIO POR MAYOR:
-    <span class="numero" id="mayorista"></span>
-  </div>
-
+<div class="precio">
+  PRECIO UNITARIO:
+  <span class="numero" id="unitario">Bs. 170</span>
 </div>
 
-<script>
-
-const datos = new URLSearchParams(window.location.search);
-
-const unitario = datos.get("unitario") || "";
-
-const mayorista = datos.get("mayorista") || "";
-
-document.getElementById("unitario").textContent =
-  " Bs. " + unitario;
-
-document.getElementById("mayorista").textContent =
-  " Bs. " + mayorista;
-
-</script>
+<div class="precio">
+  PRECIO POR MAYOR:
+  <span class="numero" id="mayorista">Bs. 142</span>
+</div>
 
 </body>
-
 </html>
