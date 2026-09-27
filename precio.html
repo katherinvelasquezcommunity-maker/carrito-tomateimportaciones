@@ -6,11 +6,7 @@
 
   <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Precio - TOMATE IMPORTACIONES</title>
 
@@ -27,10 +23,12 @@ content="width=device-width, initial-scale=1.0"
 
     html,
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0 !important;
+      padding: 0 !important;
       width: 100%;
-      background: transparent;
+      height: auto;
+      min-height: 0;
+      background: transparent !important;
       overflow: hidden;
     }
 
@@ -39,57 +37,42 @@ content="width=device-width, initial-scale=1.0"
     }
 
     .precios {
-
       width: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
 
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
 
-      gap: 2px;
+      gap: 0;
 
-      padding: 2px 0;
-
-      margin: 0;
-
-      background: transparent;
+      background: transparent !important;
     }
 
     .precio-linea {
-
       width: 100%;
 
-      margin: 0;
-
-      padding: 0;
+      margin: 0 !important;
+      padding: 0 !important;
 
       text-align: center;
 
       font-family: "Merriweather", serif;
-
       font-size: 14px;
-
-      line-height: 1.25;
-
+      line-height: 1.15;
       font-weight: 700;
 
       color: #000000;
 
-      background: transparent;
-
-      border: none;
-
-      box-shadow: none;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
     .precio-numero {
-
       color: #d71920;
-
       font-weight: 700;
-
       white-space: nowrap;
     }
 
@@ -101,27 +84,17 @@ content="width=device-width, initial-scale=1.0"
 
   <div class="precios">
 
-<div class="precio-linea">
 
+<div class="precio-linea">
   PRECIO UNITARIO:
-
-  <span
-    class="precio-numero"
-    id="precioUnitario"
-  ></span>
-
+  <span class="precio-numero" id="precioUnitario"></span>
 </div>
 
 <div class="precio-linea">
-
   PRECIO POR MAYOR:
-
-  <span
-    class="precio-numero"
-    id="precioMayorista"
-  ></span>
-
+  <span class="precio-numero" id="precioMayorista"></span>
 </div>
+
 
   </div>
 
@@ -132,19 +105,4 @@ content="width=device-width, initial-scale=1.0"
     );
 
     const unitario =
-      parametros.get("unitario") || "";
-
-    const mayorista =
-      parametros.get("mayorista") || "";
-
-    document.getElementById("precioUnitario").textContent =
-      "Bs. " + unitario;
-
-    document.getElementById("precioMayorista").textContent =
-      "Bs. " + mayorista;
-
-  </script>
-
-</body>
-
-</html>
+      parametros.g
