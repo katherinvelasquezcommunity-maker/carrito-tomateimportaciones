@@ -44,10 +44,10 @@ body {
 const datos = new URLSearchParams(window.location.search);
 
 document.getElementById("unitario").textContent =
-  "Bs. " + (datos.get("unitario") || "");
+  "Bs.  + (datos.get("unitario") || );
 
 document.getElementById("mayorista").textContent =
-  "Bs. " + (datos.get("mayorista") || "");
+  "Bs.  + (datos.get("mayorista") || );
 </script>
 
 </body>
