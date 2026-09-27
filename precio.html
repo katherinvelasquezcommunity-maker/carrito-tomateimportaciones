@@ -84,7 +84,7 @@
 
   <div class="precios">
 
-
+```
 <div class="precio-linea">
   PRECIO UNITARIO:
   <span class="precio-numero" id="precioUnitario"></span>
@@ -94,7 +94,7 @@
   PRECIO POR MAYOR:
   <span class="precio-numero" id="precioMayorista"></span>
 </div>
-
+```
 
   </div>
 
@@ -105,4 +105,19 @@
     );
 
     const unitario =
-      parametros.g
+      parametros.get("unitario") || "";
+
+    const mayorista =
+      parametros.get("mayorista") || "";
+
+    document.getElementById("precioUnitario").textContent =
+      "Bs. " + unitario;
+
+    document.getElementById("precioMayorista").textContent =
+      "Bs. " + mayorista;
+
+  </script>
+
+</body>
+
+</html>
