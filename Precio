@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+  <title>Precio - TOMATE IMPORTACIONES</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: "Merriweather", serif;
+    }
+
+    .precios {
+
+      width: 100%;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      gap: 2px;
+
+      padding: 2px 0;
+
+      margin: 0;
+
+      background: transparent;
+    }
+
+    .precio-linea {
+
+      width: 100%;
+
+      margin: 0;
+
+      padding: 0;
+
+      text-align: center;
+
+      font-family: "Merriweather", serif;
+
+      font-size: 14px;
+
+      line-height: 1.25;
+
+      font-weight: 700;
+
+      color: #000000;
+
+      background: transparent;
+
+      border: none;
+
+      box-shadow: none;
+    }
+
+    .precio-numero {
+
+      color: #d71920;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="precios">
+
+```
+<div class="precio-linea">
+
+  PRECIO UNITARIO:
+
+  <span
+    class="precio-numero"
+    id="precioUnitario"
+  ></span>
+
+</div>
+
+<div class="precio-linea">
+
+  PRECIO POR MAYOR:
+
+  <span
+    class="precio-numero"
+    id="precioMayorista"
+  ></span>
+
+</div>
+```
+
+  </div>
+
+  <script>
+
+    const parametros = new URLSearchParams(
+      window.location.search
+    );
+
+    const unitario =
+      parametros.get("unitario") || "";
+
+    const mayorista =
+      parametros.get("mayorista") || "";
+
+    document.getElementById("precioUnitario").textContent =
+      "Bs. " + unitario;
+
+    document.getElementById("precioMayorista").textContent =
+      "Bs. " + mayorista;
+
+  </script>
+
+</body>
+
+</html>
