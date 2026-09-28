@@ -55,46 +55,130 @@ body {
 
 <script>
 
-window.recibirPrecio = function(datos) {
+/* =========================================
+   CONFIGURACIÓN
+========================================= */
 
-  if (datos && datos.encontrado) {
+const ID_GOOGLE_SHEET =
+  "1XKYCHe76ACgqMxuI2pZabAKOC-s2ZudrzL4cGhRzS8g";
 
-    document.getElementById("unitario").textContent =
-      " Bs. " + datos.unitario;
 
-    document.getElementById("mayorista").textContent =
-      " Bs. " + datos.mayorista;
+/* =========================================
+   MOSTRAR PRECIO
+========================================= */
 
-  } else {
+window.recibirPrecioDesdeSheet = function(datos) {
 
-    document.getElementById("unitario").textContent =
-      "No disponible";
+  try {
 
-    document.getElementById("mayorista").textContent =
-      "No disponible";
+    if (
+      !datos ||
+      !datos.table ||
+      !datos.table.rows ||
+      datos.table.rows.length === 0
+    ) {
+
+      mostrarNoDisponible();
+
+      return;
+
+    }
+
+    var fila =
+      datos.table.rows[0].c;
+
+    var unitario =
+      fila[0] && fila[0].v != null
+        ? fila[0].v
+        : "";
+
+    var mayorista =
+      fila[1] && fila[1].v != null
+        ? fila[1].v
+        : "";
+
+    if (
+      unitario !== "" &&
+      mayorista !== ""
+    ) {
+
+      document.getElementById("unitario").textContent =
+        " Bs. " + unitario;
+
+      document.getElementById("mayorista").textContent =
+        " Bs. " + mayorista;
+
+    } else {
+
+      mostrarNoDisponible();
+
+    }
+
+  } catch (error) {
+
+    mostrarNoDisponible();
 
   }
 
 };
 
-</script>
+
+/* =========================================
+   SIN PRECIO
+========================================= */
+
+function mostrarNoDisponible() {
+
+  document.getElementById("unitario").textContent =
+    "No disponible";
+
+  document.getElementById("mayorista").textContent =
+    "No disponible";
+
+}
 
 
-<script id="conexionPrecio"></script>
-
-
-<script>
+/* =========================================
+   OBTENER CÓDIGO
+========================================= */
 
 var codigo =
-  new URLSearchParams(window.location.search).get("codigo");
+  new URLSearchParams(
+    window.location.search
+  ).get("codigo");
+
+
+/* =========================================
+   CONSULTAR GOOGLE SHEETS
+========================================= */
 
 if (codigo) {
 
-  document.getElementById("conexionPrecio").src =
-    "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec" +
-    "?accion=precio" +
-    "&codigo=" + encodeURIComponent(codigo) +
-    "&callback=recibirPrecio";
+  var script =
+    document.createElement("script");
+
+  var consulta =
+    "select C,D where A = '" +
+    String(codigo)
+      .replace(/'/g, "''") +
+    "'";
+
+  script.src =
+    "https://docs.google.com/spreadsheets/d/" +
+    ID_GOOGLE_SHEET +
+    "/gviz/tq" +
+    "?tqx=responseHandler:recibirPrecioDesdeSheet" +
+    "&tq=" +
+    encodeURIComponent(consulta) +
+    "&headers=1" +
+    "&nocache=" +
+    Date.now();
+
+  document.body.appendChild(script);
+
+} else {
+
+  mostrarNoDisponible();
 
 }
 
