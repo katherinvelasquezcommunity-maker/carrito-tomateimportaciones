@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-html, body {
+
+html,
+body {
   margin: 0;
   padding: 0;
+  width: 100%;
   background: transparent;
 }
 
@@ -20,13 +24,14 @@ body {
   font-size: 14px;
   font-weight: bold;
   line-height: 18px;
-  color: #000;
+  color: #000000;
 }
 
 .numero {
   font-size: 16px;
   color: #d71920;
 }
+
 </style>
 </head>
 
@@ -34,19 +39,14 @@ body {
 
 <div class="precio">
   PRECIO UNITARIO:
-  <span class="numero" id="unitario">CARGANDO...</span>
+  <span class="numero" id="unitario">PRUEBA OK</span>
 </div>
 
 <div class="precio">
   PRECIO POR MAYOR:
-  <span class="numero" id="mayorista">CARGANDO...</span>
+  <span class="numero" id="mayorista">PRUEBA OK</span>
 </div>
 
-<script>
-document.getElementById("unitario").textContent = "PRUEBA OK";
-document.getElementById("mayorista").textContent = "PRUEBA OK";
-</script>
-
 </body>
-</html>
+
 </html>
