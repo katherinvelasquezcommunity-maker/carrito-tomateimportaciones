@@ -1,84 +1,52 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link
-href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap"
-rel="stylesheet"
->
-
 <style>
-
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
   background: transparent;
 }
 
 body {
-  font-family: "Merriweather", Georgia, serif;
-  font-size: 14px;
-  font-weight: 700;
+  font-family: Georgia, serif;
   text-align: center;
 }
 
 .precio {
-  margin: 0;
-  padding: 0;
-  line-height: 18px;
-
-  font-family: "Merriweather", Merriweather, serif;
   font-size: 14px;
-  font-weight: 700;
-  color: #000000;
+  font-weight: bold;
+  line-height: 18px;
+  color: #000;
 }
 
 .numero {
-  font-family: "Merriweather", Merriweather, serif;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
   color: #d71920;
 }
-
 </style>
-
 </head>
 
 <body>
 
 <div class="precio">
   PRECIO UNITARIO:
-  <span class="numero" id="unitario"></span>
+  <span class="numero" id="unitario">CARGANDO...</span>
 </div>
 
 <div class="precio">
   PRECIO POR MAYOR:
-  <span class="numero" id="mayorista"></span>
+  <span class="numero" id="mayorista">CARGANDO...</span>
 </div>
 
 <script>
-
-const parametros = new URLSearchParams(window.location.search);
-
-const unitario = parametros.get("unitario");
-const mayorista = parametros.get("mayorista");
-
-document.getElementById("unitario").textContent =
-  unitario ? " Bs. " + unitario : "";
-
-document.getElementById("mayorista").textContent =
-  mayorista ? " Bs. " + mayorista : "";
-
+document.getElementById("unitario").textContent = "PRUEBA OK";
+document.getElementById("mayorista").textContent = "PRUEBA OK";
 </script>
 
 </body>
-
+</html>
 </html>
