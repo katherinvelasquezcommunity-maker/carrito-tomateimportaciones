@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,36 +17,94 @@ body {
 }
 
 body {
-  font-family: Georgia, serif;
+  font-family: "Merriweather", Georgia, serif;
   text-align: center;
 }
 
 .precio {
-  font-size: 14px;
-  font-weight: bold;
+  margin: 0;
+  padding: 0;
   line-height: 18px;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 14px;
+  font-weight: 700;
   color: #000000;
 }
 
 .numero {
+  font-family: "Merriweather", Georgia, serif;
   font-size: 16px;
+  font-weight: 700;
   color: #d71920;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="precio">
   PRECIO UNITARIO:
-  <span class="numero" id="unitario">PRUEBA OK</span>
+  <span class="numero" id="unitario">CARGANDO...</span>
 </div>
 
 <div class="precio">
   PRECIO POR MAYOR:
-  <span class="numero" id="mayorista">PRUEBA OK</span>
+  <span class="numero" id="mayorista">CARGANDO...</span>
 </div>
+
+
+<script>
+
+var parametros = new URLSearchParams(window.location.search);
+
+var codigo = parametros.get("codigo");
+
+var unitario = document.getElementById("unitario");
+var mayorista = document.getElementById("mayorista");
+
+
+window.recibirPrecio = function(datos) {
+
+  if (datos && datos.encontrado) {
+
+    unitario.textContent = " Bs. " + datos.unitario;
+
+    mayorista.textContent = " Bs. " + datos.mayorista;
+
+  } else {
+
+    unitario.textContent = "No disponible";
+
+    mayorista.textContent = "No disponible";
+
+  }
+
+};
+
+
+if (codigo) {
+
+  var script = document.createElement("script");
+
+  script.src =
+    "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec" +
+    "?accion=precio" +
+    "&codigo=" + encodeURIComponent(codigo) +
+    "&callback=recibirPrecio";
+
+  document.body.appendChild(script);
+
+} else {
+
+  unitario.textContent = "Sin código";
+
+  mayorista.textContent = "Sin código";
+
+}
+
+</script>
 
 </body>
 
