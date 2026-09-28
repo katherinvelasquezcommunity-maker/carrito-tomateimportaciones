@@ -1,1547 +1,1864 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+  <meta charset="UTF-8">
 
-<meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  >
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - TOMATE IMPORTACIONES</title>
 
-<title>TOMATE IMPORTACIONES S.R.L.</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#fff8e1;
-  color:#333;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #222;
+    }
 
-.contenedor{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
 
-.encabezado{
-  background:#9b0000;
-  color:white;
-  text-align:center;
-  padding:25px 15px;
-  border-radius:0 0 15px 15px;
-}
+    .contenedor {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 14px;
+    }
 
-.encabezado h1{
-  margin:0;
-  font-size:28px;
-}
+    /* =========================
+       ENCABEZADO
+    ========================= */
 
-.encabezado p{
-  margin:8px 0 0;
-  color:#ffd700;
-  font-style:italic;
-  font-size:17px;
-}
+    .encabezado {
+      text-align: center;
+      padding: 12px 8px 18px;
+    }
 
-h2{
-  color:#9b0000;
-  text-align:center;
-  margin-top:25px;
-}
+    .logo {
+      color: #b00000;
+      font-size: 25px;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.2;
+    }
 
-.mensaje-mayorista{
-  background:#fff3cd;
-  border:1px solid #d4af37;
-  padding:15px;
-  border-radius:10px;
-  text-align:center;
-  margin:20px 0;
-  font-weight:bold;
-}
+    .eslogan {
+      margin-top: 6px;
+      color: #777;
+      font-size: 13px;
+      font-style: italic;
+    }
 
-.activado{
-  background:#e8f5e9;
-  border:2px solid #2e7d32;
-  color:#1b5e20;
-  padding:18px;
-  border-radius:12px;
-  text-align:center;
-  margin:20px 0;
-  font-weight:bold;
-}
+    .titulo-carrito {
+      margin: 18px 0 8px;
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-.activado .titulo{
-  font-size:20px;
-  margin-bottom:10px;
-}
+    .mayorista-info {
+      background: #fff9e8;
+      border: 1px solid #e4c55a;
+      border-radius: 10px;
+      padding: 11px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.4;
+    }
 
-.activado .ahorro{
-  color:#9b0000;
-  font-size:20px;
-  margin-top:8px;
-}
+    .mayorista-info strong {
+      color: #a00000;
+    }
 
-.producto{
-  background:white;
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:18px;
-  margin-bottom:15px;
-}
+    /* =========================
+       ESTADOS
+    ========================= */
 
-.producto h3{
-  margin-top:0;
-  color:#9b0000;
-}
+    .estado {
+      text-align: center;
+      padding: 30px 15px;
+      color: #777;
+    }
 
-.precio{
-  margin:6px 0;
-}
+    .estado.cargando {
+      color: #555;
+    }
 
-.precio-mayorista{
-  color:#9b0000;
-  font-weight:bold;
-}
+    .estado.error {
+      color: #a00000;
+    }
 
-.precio-activado{
-  color:#2e7d32;
-  font-weight:bold;
-}
+    .oculto {
+      display: none !important;
+    }
 
-.controles{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-top:12px;
-}
+    /* =========================
+       PRODUCTO
+    ========================= */
 
-button{
-  border:none;
-  border-radius:8px;
-  padding:10px 15px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .producto {
+      border: 1px solid #e2e2e2;
+      border-radius: 13px;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
 
-.btn-cantidad{
-  background:#9b0000;
-  color:white;
-}
+    .producto-nombre {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #222;
+    }
 
-.btn-eliminar{
-  background:#555;
-  color:white;
-}
+    .producto-codigo {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 12px;
+    }
 
-.btn-vaciar{
-  background:#333;
-  color:white;
-  width:100%;
-  margin-top:15px;
-}
+    .fila-precios {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-.cantidad{
-  font-size:18px;
-  font-weight:bold;
-}
+    .precio-bloque {
+      flex: 1;
+      min-width: 0;
+    }
 
-.total{
-  background:#9b0000;
-  color:white;
-  padding:18px;
-  border-radius:10px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-  margin-top:20px;
-}
+    .precio-label {
+      display: block;
+      color: #555;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
 
-.formulario{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  margin-top:20px;
-  border:1px solid #ddd;
-}
+    .precio-numero {
+      color: #c40000;
+      font-size: 17px;
+      font-weight: 700;
+    }
 
-.formulario label{
-  display:block;
-  font-weight:bold;
-  margin-top:12px;
-  margin-bottom:5px;
-}
+    .fila-cantidad {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
 
-.formulario input{
-  width:100%;
-  box-sizing:border-box;
-  padding:12px;
-  border:1px solid #ccc;
-  border-radius:8px;
-  font-size:16px;
-}
+    .cantidad-controles {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      overflow: hidden;
+    }
 
-.opciones-entrega{
-  margin-top:10px;
-}
+    .btn-cantidad {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      background: #f5f5f5;
+      font-size: 21px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
 
-.opciones-entrega label{
-  display:inline-block;
-  font-weight:normal;
-  margin-right:15px;
-}
+    .btn-cantidad:active {
+      background: #e7e7e7;
+    }
 
-.botones-finales{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
+    .cantidad {
+      min-width: 42px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+    }
 
-.btn-comprar{
-  flex:1;
-  background:#9b0000;
-  color:white;
-  font-size:16px;
-}
+    .btn-eliminar {
+      border: 0;
+      background: transparent;
+      color: #a00000;
+      font-size: 13px;
+      padding: 8px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
 
-.btn-seguir{
-  flex:1;
-  background:#d4af37;
-  color:#222;
-  font-size:16px;
-  text-align:center;
-  text-decoration:none;
-  padding:12px;
-  border-radius:8px;
-  box-sizing:border-box;
-}
+    .precio-aplicado {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #555;
+    }
 
-.vacio{
-  text-align:center;
-  padding:40px 10px;
-  font-size:18px;
-  color:#777;
-}
+    .precio-aplicado.mayorista {
+      color: #a00000;
+      font-weight: 700;
+    }
 
-.cargando{
-  text-align:center;
-  padding:40px 10px;
-  font-size:18px;
-  color:#9b0000;
-  font-weight:bold;
-}
+    /* =========================
+       TOTAL
+    ========================= */
 
-.oculto{
-  display:none;
-}
+    .resumen {
+      margin-top: 18px;
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+    }
 
-@media(max-width:600px){
+    .fila-resumen {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+      font-size: 15px;
+    }
 
-  .botones-finales{
-    flex-direction:column;
-  }
+    .fila-resumen.total {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #ddd;
+      font-size: 20px;
+      font-weight: 800;
+    }
 
-  .controles{
-    flex-wrap:wrap;
-  }
+    .total-valor {
+      color: #c40000;
+    }
 
-}
+    /* =========================
+       BOTONES PRINCIPALES
+    ========================= */
 
-</style>
+    .botones-carrito {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 16px;
+    }
 
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-seguir {
+      background: #eeeeee;
+      color: #333;
+    }
+
+    .btn-vaciar {
+      background: #f7e5e5;
+      color: #9b0000;
+    }
+
+    .btn-finalizar {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      background: #b00000;
+      color: white;
+      font-size: 16px;
+    }
+
+    .btn-finalizar:active {
+      transform: scale(.99);
+    }
+
+    /* =========================
+       FORMULARIO
+    ========================= */
+
+    .formulario {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid #ddd;
+    }
+
+    .formulario h2 {
+      font-size: 19px;
+      margin: 0 0 15px;
+    }
+
+    .campo {
+      margin-bottom: 13px;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .campo input,
+    .campo select,
+    .campo textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      background: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .campo input:focus,
+    .campo select:focus,
+    .campo textarea:focus {
+      border-color: #b00000;
+    }
+
+    .campo textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .ayuda {
+      font-size: 12px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    /* =========================
+       MENSAJE DE ACTUALIZACIÓN
+    ========================= */
+
+    .actualizando {
+      position: fixed;
+      left: 50%;
+      bottom: 15px;
+      transform: translateX(-50%);
+      background: #222;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      z-index: 1000;
+      white-space: nowrap;
+      box-shadow: 0 3px 12px rgba(0,0,0,.2);
+    }
+
+    /* =========================
+       MÓVIL
+    ========================= */
+
+    @media (max-width: 480px) {
+
+      .contenedor {
+        padding: 11px;
+      }
+
+      .logo {
+        font-size: 22px;
+      }
+
+      .titulo-carrito {
+        font-size: 20px;
+      }
+
+      .producto {
+        padding: 13px;
+      }
+
+      .fila-precios {
+        gap: 8px;
+      }
+
+      .precio-numero {
+        font-size: 16px;
+      }
+
+      .btn-cantidad {
+        width: 42px;
+        height: 42px;
+      }
+
+      .botones-carrito {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
-
-<div class="encabezado">
-
-  <h1>
-    TOMATE IMPORTACIONES S.R.L.
-  </h1>
-
-  <p>
-    Calidad importada, confianza garantizada
-  </p>
-
-</div>
-
-
 <div class="contenedor">
 
+  <header class="encabezado">
+    <h1 class="logo">TOMATE IMPORTACIONES S.R.L.</h1>
 
-<h2>
-  Mi carrito
-</h2>
-
-
-<div class="mensaje-mayorista">
-
-  Precio mayorista: Lleva 3 unidades o más,
-  combinando diferentes productos,
-  y se aplicará automáticamente el precio mayorista.
-
-</div>
-
-
-<div id="estadoMayorista"></div>
-
-
-<div id="carrito"></div>
-
-
-<div id="zonaCompra" class="oculto">
-
-
-  <div id="total" class="total"></div>
-
-
-  <button
-    class="btn-vaciar"
-    onclick="vaciarCarrito()">
-
-    VACIAR CARRITO
-
-  </button>
-
-
-  <div class="formulario">
-
-
-    <h2>
-      Datos del cliente
-    </h2>
-
-
-    <label>
-      Nombre del cliente
-    </label>
-
-    <input
-      type="text"
-      id="nombreCliente"
-      placeholder="Escribe tu nombre"
-    >
-
-
-    <label>
-      WhatsApp
-    </label>
-
-    <input
-      type="tel"
-      id="whatsappCliente"
-      placeholder="Ej.: 70000000"
-    >
-
-
-    <label>
-      Método de entrega
-    </label>
-
-
-    <div class="opciones-entrega">
-
-
-      <label>
-
-        <input
-          type="radio"
-          name="entrega"
-          value="Delivery"
-          onchange="mostrarDelivery()"
-        >
-
-        Delivery
-
-      </label>
-
-
-      <label>
-
-        <input
-          type="radio"
-          name="entrega"
-          value="Entrega en tienda"
-          onchange="mostrarDelivery()"
-        >
-
-        Entrega en tienda
-
-      </label>
-
-
+    <div class="eslogan">
+      Calidad importada, confianza garantizada
     </div>
 
-
-    <div
-      id="datosDelivery"
-      class="oculto"
-    >
-
-
-      <label>
-        Dirección
-      </label>
-
-      <input
-        type="text"
-        id="direccion"
-        placeholder="Escribe tu dirección"
-      >
-
-
-      <label>
-        Referencia
-      </label>
-
-      <input
-        type="text"
-        id="referencia"
-        placeholder="Ej.: cerca de..."
-      >
-
-
+    <div class="titulo-carrito">
+      🛒 Mi carrito
     </div>
+  </header>
 
+
+  <div class="mayorista-info">
+    <strong>Precio mayorista:</strong>
+    lleva 3 unidades o más, combinando diferentes productos,
+    y se aplicará automáticamente el precio mayorista.
+  </div>
+
+
+  <!-- =========================
+       CONTENEDOR DEL CARRITO
+  ========================= -->
+
+  <div id="carrito">
+
+    <div class="estado cargando">
+      🔄 Cargando producto...
+    </div>
 
   </div>
 
 
-  <div class="botones-finales">
+  <!-- =========================
+       RESUMEN
+  ========================= -->
+
+  <div id="zonaResumen" class="oculto">
+
+    <div class="resumen">
+
+      <div class="fila-resumen">
+        <span>Total de unidades:</span>
+        <strong id="totalUnidades">0</strong>
+      </div>
+
+      <div class="fila-resumen total">
+        <span>Total:</span>
+        <span
+          id="totalGeneral"
+          class="total-valor"
+        >
+          Bs 0
+        </span>
+      </div>
+
+    </div>
 
 
-    <a
-      class="btn-seguir"
-      href="https://sites.google.com/view/tomate-importaciones/productos"
-    >
+    <div class="botones-carrito">
 
-      SEGUIR COMPRANDO
+      <button
+        class="btn btn-seguir"
+        onclick="seguirComprando()"
+      >
+        ← Seguir comprando
+      </button>
 
-    </a>
+      <button
+        class="btn btn-vaciar"
+        onclick="vaciarCarrito()"
+      >
+        🗑️ Vaciar carrito
+      </button>
+
+    </div>
 
 
-    <button
-      class="btn-comprar"
-      onclick="finalizarPedido()"
-    >
+    <!-- =========================
+         FORMULARIO CLIENTE
+    ========================= -->
 
-      FINALIZAR PEDIDO
+    <div class="formulario">
 
-    </button>
+      <h2>📋 Datos del pedido</h2>
 
+
+      <div class="campo">
+
+        <label for="nombreCliente">
+          Nombre del cliente
+        </label>
+
+        <input
+          type="text"
+          id="nombreCliente"
+          placeholder="Escribe tu nombre"
+          autocomplete="name"
+        >
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="whatsappCliente">
+          WhatsApp
+        </label>
+
+        <input
+          type="tel"
+          id="whatsappCliente"
+          placeholder="Ej.: 7XXXXXXX"
+          inputmode="tel"
+          autocomplete="tel"
+        >
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="tipoEntrega">
+          Forma de entrega
+        </label>
+
+        <select id="tipoEntrega">
+          <option value="">
+            Selecciona una opción
+          </option>
+
+          <option value="Delivery">
+            🚚 Delivery
+          </option>
+
+          <option value="Entrega en tienda">
+            🏪 Entrega en tienda
+          </option>
+        </select>
+
+      </div>
+
+
+      <div
+        class="campo"
+        id="zonaDireccion"
+        style="display:none;"
+      >
+
+        <label for="direccionCliente">
+          Dirección / referencia
+        </label>
+
+        <textarea
+          id="direccionCliente"
+          placeholder="Escribe tu dirección y una referencia"
+        ></textarea>
+
+      </div>
+
+
+      <button
+        class="btn btn-finalizar"
+        onclick="finalizarPedido()"
+      >
+        📲 FINALIZAR PEDIDO POR WHATSAPP
+      </button>
+
+    </div>
 
   </div>
 
-
 </div>
 
 
-</div>
+<!-- Indicador de actualización -->
 
+<div
+  id="actualizando"
+  class="actualizando oculto"
+>
+  🔄 Actualizando precios...
+</div>
 
 
 <script>
 
+  /* ==========================================================
+     CONFIGURACIÓN
+  ========================================================== */
 
-// =====================================================
-// CONFIGURACIÓN
-// =====================================================
-
-const CLAVE_CARRITO =
-  "tomate_carrito";
-
-
-const NUMERO_WHATSAPP =
-  "59163336796";
+  const URL_APPS_SCRIPT =
+    "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec";
 
 
-const URL_APPS_SCRIPT =
-  "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec";
+  const URL_PRODUCTOS =
+    "https://sites.google.com/view/tomate-importaciones/productos";
 
 
-// =====================================================
-// CARRITO
-// =====================================================
+  const WHATSAPP_EMPRESA =
+    "59163336796";
 
-let carrito = [];
 
-try{
+  const CLAVE_CARRITO =
+    "tomate_importaciones_carrito";
 
-  carrito =
-    JSON.parse(
-      localStorage.getItem(
-        CLAVE_CARRITO
-      ) || "[]"
-    );
 
-  if(!Array.isArray(carrito)){
-    carrito = [];
+  let carrito = [];
+
+
+  /* ==========================================================
+     INICIO RÁPIDO
+  ========================================================== */
+
+  iniciar();
+
+
+  function iniciar() {
+
+    cargarCarritoGuardado();
+
+    const parametros =
+      new URLSearchParams(window.location.search);
+
+    const codigo =
+      parametros.get("codigo");
+
+    const nombre =
+      parametros.get("nombre");
+
+    const unitario =
+      parametros.get("unitario");
+
+    const mayorista =
+      parametros.get("mayorista");
+
+
+    /*
+     * PRIORIDAD 1:
+     * enlace nuevo por código.
+     */
+
+    if (codigo) {
+
+      /*
+       * Primero mostramos inmediatamente
+       * cualquier producto guardado previamente.
+       *
+       * Luego consultamos el precio actualizado.
+       */
+
+      mostrarCarrito();
+
+      cargarProductoPorCodigo(codigo);
+
+      return;
+    }
+
+
+    /*
+     * PRIORIDAD 2:
+     * compatibilidad con enlaces antiguos.
+     */
+
+    if (
+      nombre &&
+      unitario !== null &&
+      mayorista !== null
+    ) {
+
+      agregarProducto({
+
+        codigo: "",
+        producto: nombre,
+        unitario: Number(unitario),
+        mayorista: Number(mayorista)
+
+      });
+
+      limpiarURL();
+
+      return;
+    }
+
+
+    /*
+     * Si no hay producto nuevo,
+     * simplemente mostramos lo guardado.
+     */
+
+    mostrarCarrito();
+
   }
 
-}catch(error){
 
-  carrito = [];
+  /* ==========================================================
+     CARGAR CARRITO GUARDADO
+  ========================================================== */
 
-}
+  function cargarCarritoGuardado() {
 
+    try {
 
-// =====================================================
-// GUARDAR
-// =====================================================
+      const guardado =
+        localStorage.getItem(CLAVE_CARRITO);
 
-function guardarCarrito(){
+      if (!guardado) {
 
-  localStorage.setItem(
-    CLAVE_CARRITO,
-    JSON.stringify(carrito)
-  );
+        carrito = [];
 
-}
-
-
-// =====================================================
-// OBTENER PRODUCTO INICIAL
-// =====================================================
-
-function obtenerProductoInicial(){
-
-  const parametros =
-    new URLSearchParams(
-      window.location.search
-    );
+        return;
+      }
 
 
-  const codigo =
-    parametros.get("codigo");
+      const datos =
+        JSON.parse(guardado);
 
 
-  // NUEVO SISTEMA
-  if(codigo){
+      if (Array.isArray(datos)) {
 
-    cargarProductoPorCodigo(
-      codigo
-    );
+        carrito = datos;
 
-    return;
+      } else {
+
+        carrito = [];
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Error leyendo carrito:",
+        error
+      );
+
+      carrito = [];
+
+    }
 
   }
 
 
-  // SISTEMA ANTIGUO
-  const nombre =
-    parametros.get("nombre");
+  /* ==========================================================
+     GUARDAR CARRITO
+  ========================================================== */
+
+  function guardarCarrito() {
+
+    try {
+
+      localStorage.setItem(
+        CLAVE_CARRITO,
+        JSON.stringify(carrito)
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error guardando carrito:",
+        error
+      );
+
+    }
+
+  }
 
 
-  const unitario =
-    Number(
-      parametros.get("unitario")
-    );
+  /* ==========================================================
+     MOSTRAR CARRITO
+  ========================================================== */
+
+  function mostrarCarrito() {
+
+    const contenedor =
+      document.getElementById("carrito");
 
 
-  const mayorista =
-    Number(
-      parametros.get("mayorista")
-    );
+    if (!carrito.length) {
+
+      contenedor.innerHTML =
+        '<div class="estado">' +
+        '🛒 Tu carrito está vacío.' +
+        '</div>';
+
+      document
+        .getElementById("zonaResumen")
+        .classList.add("oculto");
+
+      return;
+    }
 
 
-  if(
-    nombre &&
-    !isNaN(unitario) &&
-    !isNaN(mayorista)
-  ){
+    contenedor.innerHTML = "";
 
-    agregarProductoAlCarrito({
 
-      codigo:"",
-      producto:nombre,
-      unitario:unitario,
-      mayorista:mayorista
+    carrito.forEach(function(producto, indice) {
+
+      const cantidad =
+        Number(producto.cantidad) || 1;
+
+
+      const unitario =
+        Number(producto.unitario) || 0;
+
+
+      const mayorista =
+        Number(producto.mayorista) || 0;
+
+
+      const totalUnidades =
+        obtenerTotalUnidades();
+
+
+      const usaMayorista =
+        totalUnidades >= 3;
+
+
+      const precioAplicado =
+        usaMayorista
+          ? mayorista
+          : unitario;
+
+
+      const totalProducto =
+        precioAplicado * cantidad;
+
+
+      const tarjeta =
+        document.createElement("div");
+
+
+      tarjeta.className = "producto";
+
+
+      tarjeta.innerHTML =
+
+        '<div class="producto-nombre">' +
+          escaparHTML(producto.nombre) +
+        '</div>' +
+
+        (
+          producto.codigo
+            ? '<div class="producto-codigo">' +
+                'Código: ' +
+                escaparHTML(producto.codigo) +
+              '</div>'
+            : ''
+        ) +
+
+        '<div class="fila-precios">' +
+
+          '<div class="precio-bloque">' +
+            '<span class="precio-label">' +
+              'Precio unitario' +
+            '</span>' +
+
+            '<span class="precio-numero">' +
+              'Bs ' +
+              formatearPrecio(unitario) +
+            '</span>' +
+          '</div>' +
+
+          '<div class="precio-bloque">' +
+            '<span class="precio-label">' +
+              'Precio mayorista' +
+            '</span>' +
+
+            '<span class="precio-numero">' +
+              'Bs ' +
+              formatearPrecio(mayorista) +
+            '</span>' +
+          '</div>' +
+
+        '</div>' +
+
+        '<div class="fila-cantidad">' +
+
+          '<div class="cantidad-controles">' +
+
+            '<button ' +
+              'class="btn-cantidad" ' +
+              'onclick="cambiarCantidad(' +
+                indice +
+                ', -1)"' +
+            '>' +
+              '−' +
+            '</button>' +
+
+            '<span class="cantidad">' +
+              cantidad +
+            '</span>' +
+
+            '<button ' +
+              'class="btn-cantidad" ' +
+              'onclick="cambiarCantidad(' +
+                indice +
+                ', 1)"' +
+            '>' +
+              '+' +
+            '</button>' +
+
+          '</div>' +
+
+          '<button ' +
+            'class="btn-eliminar" ' +
+            'onclick="eliminarProducto(' +
+              indice +
+            ')"' +
+          '>' +
+            '🗑️ Eliminar' +
+          '</button>' +
+
+        '</div>' +
+
+        '<div class="' +
+          (
+            usaMayorista
+              ? 'precio-aplicado mayorista'
+              : 'precio-aplicado'
+          ) +
+        '">' +
+
+          (
+            usaMayorista
+              ? '🏷️ Precio mayorista aplicado: '
+              : 'Precio aplicado: '
+          ) +
+
+          '<strong>Bs ' +
+          formatearPrecio(precioAplicado) +
+          '</strong>' +
+
+          ' × ' +
+          cantidad +
+
+          ' = ' +
+
+          '<strong>Bs ' +
+          formatearPrecio(totalProducto) +
+          '</strong>' +
+
+        '</div>';
+
+
+      contenedor.appendChild(tarjeta);
 
     });
 
+
+    document
+      .getElementById("zonaResumen")
+      .classList.remove("oculto");
+
+
+    actualizarResumen();
+
+  }
+
+
+  /* ==========================================================
+     AGREGAR PRODUCTO
+  ========================================================== */
+
+  function agregarProducto(producto) {
+
+    const codigo =
+      producto.codigo
+        ? String(producto.codigo)
+        : "";
+
+
+    let existente =
+      null;
+
+
+    if (codigo) {
+
+      existente =
+        carrito.find(function(item) {
+
+          return String(item.codigo) === codigo;
+
+        });
+
+    } else {
+
+      existente =
+        carrito.find(function(item) {
+
+          return (
+            !item.codigo &&
+            item.nombre === producto.producto
+          );
+
+        });
+
+    }
+
+
+    if (existente) {
+
+      existente.nombre =
+        producto.producto;
+
+      existente.codigo =
+        codigo;
+
+      existente.unitario =
+        Number(producto.unitario);
+
+      existente.mayorista =
+        Number(producto.mayorista);
+
+      existente.cantidad =
+        (Number(existente.cantidad) || 0) + 1;
+
+    } else {
+
+      carrito.push({
+
+        codigo: codigo,
+
+        nombre: producto.producto,
+
+        unitario:
+          Number(producto.unitario) || 0,
+
+        mayorista:
+          Number(producto.mayorista) || 0,
+
+        cantidad: 1
+
+      });
+
+    }
+
+
+    guardarCarrito();
+
+    mostrarCarrito();
+
+  }
+
+
+  /* ==========================================================
+     CONSULTA DINÁMICA DE PRECIO
+  ========================================================== */
+
+  function cargarProductoPorCodigo(codigo) {
+
+    mostrarIndicadorActualizacion();
+
+
+    /*
+     * Creamos una función única para esta solicitud.
+     * Así evitamos conflictos con otras consultas.
+     */
+
+    const nombreCallback =
+      "recibirProducto_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+
+    window[nombreCallback] =
+      function(datos) {
+
+        try {
+
+          console.log(
+            "Precio recibido:",
+            datos
+          );
+
+
+          if (
+            datos &&
+            datos.encontrado === true
+          ) {
+
+            actualizarProductoDesdeServidor({
+
+              codigo:
+                datos.codigo,
+
+              producto:
+                datos.producto,
+
+              unitario:
+                Number(datos.unitario),
+
+              mayorista:
+                Number(datos.mayorista)
+
+            });
+
+
+          } else {
+
+            console.warn(
+              "Producto no encontrado:",
+              codigo
+            );
+
+          }
+
+        } finally {
+
+          ocultarIndicadorActualizacion();
+
+          try {
+            delete window[nombreCallback];
+          } catch (e) {}
+
+        }
+
+      };
+
+
+    const script =
+      document.createElement("script");
+
+
+    script.src =
+      URL_APPS_SCRIPT +
+      "?accion=precio" +
+      "&codigo=" +
+      encodeURIComponent(codigo) +
+      "&callback=" +
+      encodeURIComponent(nombreCallback) +
+      "&nocache=" +
+      Date.now();
+
+
+    script.async = true;
+
+
+    script.onerror =
+      function() {
+
+        console.warn(
+          "No se pudo actualizar el precio."
+        );
+
+        ocultarIndicadorActualizacion();
+
+        try {
+          delete window[nombreCallback];
+        } catch (e) {}
+
+      };
+
+
+    document
+      .head
+      .appendChild(script);
+
+
+    /*
+     * Eliminamos el script después de unos segundos.
+     * No afecta la respuesta; solamente evita
+     * acumular elementos innecesarios.
+     */
+
+    setTimeout(function() {
+
+      try {
+
+        if (script.parentNode) {
+
+          script.parentNode.removeChild(
+            script
+          );
+
+        }
+
+      } catch (e) {}
+
+    }, 15000);
+
+  }
+
+
+  /* ==========================================================
+     ACTUALIZAR PRODUCTO DESDE GOOGLE SHEETS
+  ========================================================== */
+
+  function actualizarProductoDesdeServidor(datos) {
+
+    const codigo =
+      String(datos.codigo);
+
+
+    const existente =
+      carrito.find(function(producto) {
+
+        return (
+          String(producto.codigo) === codigo
+        );
+
+      });
+
+
+    if (existente) {
+
+      /*
+       * Conservamos la cantidad que
+       * ya tenía el cliente.
+       */
+
+      const cantidadAnterior =
+        Number(existente.cantidad) || 1;
+
+
+      existente.nombre =
+        datos.producto;
+
+      existente.unitario =
+        Number(datos.unitario);
+
+      existente.mayorista =
+        Number(datos.mayorista);
+
+      existente.cantidad =
+        cantidadAnterior;
+
+
+    } else {
+
+      /*
+       * Si todavía no existía,
+       * lo agregamos con cantidad 1.
+       */
+
+      carrito.push({
+
+        codigo: codigo,
+
+        nombre: datos.producto,
+
+        unitario:
+          Number(datos.unitario),
+
+        mayorista:
+          Number(datos.mayorista),
+
+        cantidad: 1
+
+      });
+
+    }
+
+
+    guardarCarrito();
+
+    mostrarCarrito();
 
     limpiarURL();
 
   }
 
-}
+
+  /* ==========================================================
+     CAMBIAR CANTIDAD
+  ========================================================== */
+
+  function cambiarCantidad(indice, cambio) {
+
+    if (
+      !carrito[indice]
+    ) {
+      return;
+    }
 
 
-// =====================================================
-// CARGAR PRODUCTO DESDE GOOGLE APPS SCRIPT
-// =====================================================
-
-function cargarProductoPorCodigo(
-  codigo
-){
-
-  const contenedor =
-    document.getElementById(
-      "carrito"
-    );
-
-
-  contenedor.innerHTML =
-    '<div class="cargando">🔄 Cargando producto...</div>';
-
-
-  // IMPORTANTE:
-  // Esta función debe existir ANTES
-  // de cargar el script JSONP.
-
-  window.recibirProductoCarrito =
-    function(datos){
-
-      console.log(
-        "Respuesta recibida:",
-        datos
-      );
-
-
-      if(
-        datos &&
-        datos.encontrado === true
-      ){
-
-        agregarProductoAlCarrito({
-
-          codigo:
-            datos.codigo,
-
-          producto:
-            datos.producto,
-
-          unitario:
-            Number(
-              datos.unitario
-            ),
-
-          mayorista:
-            Number(
-              datos.mayorista
-            )
-
-        });
-
-
-        limpiarURL();
-
-
-      }else{
-
-        contenedor.innerHTML =
-          '<div class="vacio">Producto no encontrado.</div>';
-
-      }
-
-    };
-
-
-  const script =
-    document.createElement(
-      "script"
-    );
-
-
-  script.type =
-    "text/javascript";
-
-
-  script.src =
-    URL_APPS_SCRIPT +
-    "?accion=precio" +
-    "&codigo=" +
-    encodeURIComponent(
-      codigo
-    ) +
-    "&callback=recibirProductoCarrito" +
-    "&nocache=" +
-    Date.now();
-
-
-  script.onload =
-    function(){
-
-      console.log(
-        "Solicitud enviada correctamente."
-      );
-
-    };
-
-
-  script.onerror =
-    function(){
-
-      contenedor.innerHTML =
-        '<div class="vacio">No se pudo conectar con el servidor de precios.</div>';
-
-    };
-
-
-  document
-    .getElementsByTagName(
-      "head"
-    )[0]
-    .appendChild(
-      script
-    );
-
-}
-
-
-// =====================================================
-// AGREGAR PRODUCTO
-// =====================================================
-
-function agregarProductoAlCarrito(
-  producto
-){
-
-  const existente =
-    carrito.find(
-      function(p){
-
-        if(
-          producto.codigo &&
-          p.codigo
-        ){
-
-          return String(
-            p.codigo
-          ) === String(
-            producto.codigo
-          );
-
-        }
-
-
-        return p.nombre ===
-          producto.producto;
-
-      }
-    );
-
-
-  if(existente){
-
-    // ACTUALIZA SIEMPRE LOS PRECIOS
-    // CON LOS DATOS ACTUALES
-
-    existente.nombre =
-      producto.producto;
-
-    existente.codigo =
-      producto.codigo;
-
-    existente.unitario =
+    let cantidad =
       Number(
-        producto.unitario
-      );
-
-    existente.mayorista =
-      Number(
-        producto.mayorista
-      );
-
-    existente.cantidad++;
-
-  }else{
-
-    carrito.push({
-
-      codigo:
-        producto.codigo,
-
-      nombre:
-        producto.producto,
-
-      unitario:
-        Number(
-          producto.unitario
-        ),
-
-      mayorista:
-        Number(
-          producto.mayorista
-        ),
-
-      cantidad:1
-
-    });
-
-  }
+        carrito[indice].cantidad
+      ) || 1;
 
 
-  guardarCarrito();
-
-  renderizarCarrito();
-
-}
+    cantidad += cambio;
 
 
-// =====================================================
-// LIMPIAR URL
-// =====================================================
+    if (cantidad <= 0) {
 
-function limpiarURL(){
+      carrito.splice(indice, 1);
 
-  window.history.replaceState(
-    {},
-    document.title,
-    window.location.pathname
-  );
+    } else {
 
-}
-
-
-// =====================================================
-// CANTIDAD TOTAL
-// =====================================================
-
-function calcularCantidadTotal(){
-
-  return carrito.reduce(
-    function(total,p){
-
-      return total +
-        Number(
-          p.cantidad
-        );
-
-    },
-    0
-  );
-
-}
-
-
-// =====================================================
-// TOTALES
-// =====================================================
-
-function calcularTotales(){
-
-  let totalUnitario = 0;
-
-  let totalMayorista = 0;
-
-
-  carrito.forEach(
-    function(producto){
-
-      totalUnitario +=
-        Number(
-          producto.unitario
-        ) *
-        Number(
-          producto.cantidad
-        );
-
-
-      totalMayorista +=
-        Number(
-          producto.mayorista
-        ) *
-        Number(
-          producto.cantidad
-        );
+      carrito[indice].cantidad =
+        cantidad;
 
     }
-  );
 
-
-  return {
-
-    unitario:
-      totalUnitario,
-
-    mayorista:
-      totalMayorista
-
-  };
-
-}
-
-
-// =====================================================
-// MOSTRAR CARRITO
-// =====================================================
-
-function renderizarCarrito(){
-
-  const contenedor =
-    document.getElementById(
-      "carrito"
-    );
-
-
-  const zonaCompra =
-    document.getElementById(
-      "zonaCompra"
-    );
-
-
-  const estadoMayorista =
-    document.getElementById(
-      "estadoMayorista"
-    );
-
-
-  if(
-    carrito.length === 0
-  ){
-
-    contenedor.innerHTML =
-      '<div class="vacio">Tu carrito está vacío.</div>';
-
-
-    estadoMayorista.innerHTML =
-      "";
-
-
-    zonaCompra.classList.add(
-      "oculto"
-    );
-
-
-    return;
-
-  }
-
-
-  zonaCompra.classList.remove(
-    "oculto"
-  );
-
-
-  const cantidadTotal =
-    calcularCantidadTotal();
-
-
-  const usaMayorista =
-    cantidadTotal >= 3;
-
-
-  const totales =
-    calcularTotales();
-
-
-  const ahorro =
-    totales.unitario -
-    totales.mayorista;
-
-
-  // MAYORISTA
-
-  if(usaMayorista){
-
-    estadoMayorista.innerHTML = `
-
-      <div class="activado">
-
-        <div class="titulo">
-          🏷️ ¡PRECIO MAYORISTA ACTIVADO!
-        </div>
-
-        Tu compra tiene
-        ${cantidadTotal}
-        unidades.
-
-        <div class="ahorro">
-          🎉 ¡Estás ahorrando Bs
-          ${ahorro.toFixed(2)}!
-        </div>
-
-      </div>
-
-    `;
-
-  }else{
-
-    const faltan =
-      3 -
-      cantidadTotal;
-
-
-    estadoMayorista.innerHTML = `
-
-      <div class="mensaje-mayorista">
-
-        🔔 Te faltan
-        <strong>
-          ${faltan}
-        </strong>
-
-        unidad${faltan === 1 ? "" : "es"}
-
-        para activar el precio mayorista.
-
-      </div>
-
-    `;
-
-  }
-
-
-  // PRODUCTOS
-
-  let html = "";
-
-  let totalAplicado = 0;
-
-
-  carrito.forEach(
-    function(producto,index){
-
-      const precioAplicado =
-        usaMayorista
-        ? Number(
-            producto.mayorista
-          )
-        : Number(
-            producto.unitario
-          );
-
-
-      const subtotal =
-        precioAplicado *
-        Number(
-          producto.cantidad
-        );
-
-
-      totalAplicado +=
-        subtotal;
-
-
-      html += `
-
-        <div class="producto">
-
-          <h3>
-            ${producto.nombre}
-          </h3>
-
-
-          <div class="precio">
-
-            Precio unitario:
-
-            <strong>
-              Bs ${Number(
-                producto.unitario
-              ).toFixed(2)}
-            </strong>
-
-          </div>
-
-
-          <div class="precio precio-mayorista">
-
-            Precio mayorista:
-
-            Bs ${Number(
-              producto.mayorista
-            ).toFixed(2)}
-
-          </div>
-
-
-          <div class="${
-            usaMayorista
-            ? "precio-activado"
-            : ""
-          }">
-
-            ${
-              usaMayorista
-              ? "🏷️ Precio mayorista aplicado:"
-              : "Precio aplicado:"
-            }
-
-            <strong>
-              Bs ${precioAplicado.toFixed(2)}
-            </strong>
-
-          </div>
-
-
-          <div>
-
-            Subtotal:
-
-            <strong>
-              Bs ${subtotal.toFixed(2)}
-            </strong>
-
-          </div>
-
-
-          <div class="controles">
-
-
-            <button
-              class="btn-cantidad"
-              onclick="cambiarCantidad(${index},-1)"
-            >
-              −
-            </button>
-
-
-            <span class="cantidad">
-              ${producto.cantidad}
-            </span>
-
-
-            <button
-              class="btn-cantidad"
-              onclick="cambiarCantidad(${index},1)"
-            >
-              +
-            </button>
-
-
-            <button
-              class="btn-eliminar"
-              onclick="eliminarProducto(${index})"
-            >
-              Eliminar
-            </button>
-
-
-          </div>
-
-
-        </div>
-
-      `;
-
-    }
-  );
-
-
-  contenedor.innerHTML =
-    html;
-
-
-  document.getElementById(
-    "total"
-  ).innerHTML =
-    "TOTAL: Bs " +
-    totalAplicado.toFixed(2);
-
-}
-
-
-// =====================================================
-// CAMBIAR CANTIDAD
-// =====================================================
-
-function cambiarCantidad(
-  index,
-  cambio
-){
-
-  if(!carrito[index]){
-    return;
-  }
-
-
-  carrito[index].cantidad +=
-    cambio;
-
-
-  if(
-    carrito[index].cantidad <= 0
-  ){
-
-    carrito.splice(
-      index,
-      1
-    );
-
-  }
-
-
-  guardarCarrito();
-
-  renderizarCarrito();
-
-}
-
-
-// =====================================================
-// ELIMINAR
-// =====================================================
-
-function eliminarProducto(
-  index
-){
-
-  carrito.splice(
-    index,
-    1
-  );
-
-
-  guardarCarrito();
-
-  renderizarCarrito();
-
-}
-
-
-// =====================================================
-// VACIAR
-// =====================================================
-
-function vaciarCarrito(){
-
-  if(
-    confirm(
-      "¿Quieres vaciar todo el carrito?"
-    )
-  ){
-
-    carrito = [];
 
     guardarCarrito();
 
-    renderizarCarrito();
-
-  }
-
-}
-
-
-// =====================================================
-// DELIVERY
-// =====================================================
-
-function mostrarDelivery(){
-
-  const opcion =
-    document.querySelector(
-      'input[name="entrega"]:checked'
-    );
-
-
-  const datos =
-    document.getElementById(
-      "datosDelivery"
-    );
-
-
-  if(
-    opcion &&
-    opcion.value === "Delivery"
-  ){
-
-    datos.classList.remove(
-      "oculto"
-    );
-
-  }else{
-
-    datos.classList.add(
-      "oculto"
-    );
-
-  }
-
-}
-
-
-// =====================================================
-// FINALIZAR PEDIDO
-// =====================================================
-
-function finalizarPedido(){
-
-  if(
-    carrito.length === 0
-  ){
-
-    alert(
-      "El carrito está vacío."
-    );
-
-    return;
+    mostrarCarrito();
 
   }
 
 
-  const nombre =
+  /* ==========================================================
+     ELIMINAR PRODUCTO
+  ========================================================== */
+
+  function eliminarProducto(indice) {
+
+    if (
+      !carrito[indice]
+    ) {
+      return;
+    }
+
+
+    carrito.splice(indice, 1);
+
+
+    guardarCarrito();
+
+    mostrarCarrito();
+
+  }
+
+
+  /* ==========================================================
+     VACIAR CARRITO
+  ========================================================== */
+
+  function vaciarCarrito() {
+
+    if (!carrito.length) {
+      return;
+    }
+
+
+    const confirmar =
+      confirm(
+        "¿Quieres vaciar todo el carrito?"
+      );
+
+
+    if (!confirmar) {
+      return;
+    }
+
+
+    carrito = [];
+
+
+    guardarCarrito();
+
+    mostrarCarrito();
+
+  }
+
+
+  /* ==========================================================
+     TOTAL DE UNIDADES
+  ========================================================== */
+
+  function obtenerTotalUnidades() {
+
+    return carrito.reduce(
+      function(total, producto) {
+
+        return (
+          total +
+          (
+            Number(producto.cantidad) || 0
+          )
+        );
+
+      },
+      0
+    );
+
+  }
+
+
+  /* ==========================================================
+     RESUMEN
+  ========================================================== */
+
+  function actualizarResumen() {
+
+    const unidades =
+      obtenerTotalUnidades();
+
+
+    const mayorista =
+      unidades >= 3;
+
+
+    let total = 0;
+
+
+    carrito.forEach(
+      function(producto) {
+
+        const cantidad =
+          Number(producto.cantidad) || 0;
+
+
+        const precio =
+          mayorista
+            ? Number(producto.mayorista) || 0
+            : Number(producto.unitario) || 0;
+
+
+        total +=
+          precio * cantidad;
+
+      }
+    );
+
+
     document
-      .getElementById(
-        "nombreCliente"
-      )
-      .value
-      .trim();
+      .getElementById("totalUnidades")
+      .textContent =
+        unidades;
 
 
-  const whatsapp =
     document
-      .getElementById(
-        "whatsappCliente"
-      )
-      .value
-      .trim();
-
-
-  const opcion =
-    document.querySelector(
-      'input[name="entrega"]:checked'
-    );
-
-
-  if(!nombre){
-
-    alert(
-      "Por favor, coloca tu nombre."
-    );
-
-    return;
+      .getElementById("totalGeneral")
+      .textContent =
+        "Bs " +
+        formatearPrecio(total);
 
   }
 
 
-  if(!whatsapp){
+  /* ==========================================================
+     MOSTRAR DIRECCIÓN SI ES DELIVERY
+  ========================================================== */
 
-    alert(
-      "Por favor, coloca tu número de WhatsApp."
+  document
+    .getElementById("tipoEntrega")
+    .addEventListener(
+      "change",
+      function() {
+
+        const zona =
+          document.getElementById(
+            "zonaDireccion"
+          );
+
+
+        if (
+          this.value === "Delivery"
+        ) {
+
+          zona.style.display =
+            "block";
+
+        } else {
+
+          zona.style.display =
+            "none";
+
+        }
+
+      }
     );
 
-    return;
 
-  }
+  /* ==========================================================
+     FINALIZAR PEDIDO
+  ========================================================== */
 
+  function finalizarPedido() {
 
-  if(!opcion){
-
-    alert(
-      "Por favor, selecciona el método de entrega."
-    );
-
-    return;
-
-  }
-
-
-  let direccion = "";
-
-  let referencia = "";
-
-
-  if(
-    opcion.value === "Delivery"
-  ){
-
-    direccion =
-      document
-        .getElementById(
-          "direccion"
-        )
-        .value
-        .trim();
-
-
-    referencia =
-      document
-        .getElementById(
-          "referencia"
-        )
-        .value
-        .trim();
-
-
-    if(!direccion){
+    if (!carrito.length) {
 
       alert(
-        "Por favor, coloca tu dirección."
+        "Tu carrito está vacío."
       );
 
       return;
 
     }
 
-  }
+
+    const nombre =
+      document
+        .getElementById("nombreCliente")
+        .value
+        .trim();
 
 
-  const cantidadTotal =
-    calcularCantidadTotal();
+    const whatsapp =
+      document
+        .getElementById("whatsappCliente")
+        .value
+        .trim();
 
 
-  const usaMayorista =
-    cantidadTotal >= 3;
+    const tipoEntrega =
+      document
+        .getElementById("tipoEntrega")
+        .value;
 
 
-  let mensaje =
-    "🛒 *NUEVO PEDIDO - TOMATE IMPORTACIONES S.R.L.*%0A%0A";
+    const direccion =
+      document
+        .getElementById("direccionCliente")
+        .value
+        .trim();
 
 
-  mensaje +=
-    "👤 *Cliente:* " +
-    encodeURIComponent(
-      nombre
-    ) +
-    "%0A";
+    if (!nombre) {
 
+      alert(
+        "Por favor, escribe tu nombre."
+      );
 
-  mensaje +=
-    "📱 *WhatsApp:* " +
-    encodeURIComponent(
-      whatsapp
-    ) +
-    "%0A";
+      document
+        .getElementById("nombreCliente")
+        .focus();
 
-
-  mensaje +=
-    "🚚 *Entrega:* " +
-    encodeURIComponent(
-      opcion.value
-    ) +
-    "%0A";
-
-
-  if(
-    opcion.value === "Delivery"
-  ){
-
-    mensaje +=
-      "📍 *Dirección:* " +
-      encodeURIComponent(
-        direccion
-      ) +
-      "%0A";
-
-
-    if(referencia){
-
-      mensaje +=
-        "📌 *Referencia:* " +
-        encodeURIComponent(
-          referencia
-        ) +
-        "%0A";
+      return;
 
     }
 
+
+    if (!whatsapp) {
+
+      alert(
+        "Por favor, escribe tu número de WhatsApp."
+      );
+
+      document
+        .getElementById("whatsappCliente")
+        .focus();
+
+      return;
+
+    }
+
+
+    if (!tipoEntrega) {
+
+      alert(
+        "Selecciona una forma de entrega."
+      );
+
+      document
+        .getElementById("tipoEntrega")
+        .focus();
+
+      return;
+
+    }
+
+
+    if (
+      tipoEntrega === "Delivery" &&
+      !direccion
+    ) {
+
+      alert(
+        "Por favor, escribe tu dirección y referencia."
+      );
+
+      document
+        .getElementById("direccionCliente")
+        .focus();
+
+      return;
+
+    }
+
+
+    const totalUnidades =
+      obtenerTotalUnidades();
+
+
+    const usaMayorista =
+      totalUnidades >= 3;
+
+
+    let totalGeneral = 0;
+
+
+    let mensaje =
+      "🛒 *NUEVO PEDIDO - TOMATE IMPORTACIONES S.R.L.*\n\n";
+
+
+    mensaje +=
+      "👤 *Cliente:* " +
+      nombre +
+      "\n";
+
+
+    mensaje +=
+      "📱 *WhatsApp:* " +
+      whatsapp +
+      "\n";
+
+
+    mensaje +=
+      "🚚 *Entrega:* " +
+      tipoEntrega +
+      "\n";
+
+
+    if (
+      tipoEntrega === "Delivery"
+    ) {
+
+      mensaje +=
+        "📍 *Dirección:* " +
+        direccion +
+        "\n";
+
+    }
+
+
+    mensaje +=
+      "\n🛍️ *PRODUCTOS:*\n";
+
+
+    carrito.forEach(
+      function(producto, indice) {
+
+        const cantidad =
+          Number(producto.cantidad) || 0;
+
+
+        const precio =
+          usaMayorista
+            ? Number(producto.mayorista) || 0
+            : Number(producto.unitario) || 0;
+
+
+        const subtotal =
+          cantidad * precio;
+
+
+        totalGeneral +=
+          subtotal;
+
+
+        mensaje +=
+          "\n" +
+          (indice + 1) +
+          ". *" +
+          producto.nombre +
+          "*\n";
+
+
+        if (producto.codigo) {
+
+          mensaje +=
+            "Código: " +
+            producto.codigo +
+            "\n";
+
+        }
+
+
+        mensaje +=
+          "Cantidad: " +
+          cantidad +
+          "\n";
+
+
+        mensaje +=
+          "Precio: Bs " +
+          formatearPrecio(precio) +
+          "\n";
+
+
+        mensaje +=
+          "Subtotal: Bs " +
+          formatearPrecio(subtotal) +
+          "\n";
+
+      }
+    );
+
+
+    mensaje +=
+      "\n📦 *Total de unidades:* " +
+      totalUnidades;
+
+
+    if (usaMayorista) {
+
+      mensaje +=
+        "\n🏷️ *Se aplicó precio mayorista.*";
+
+    }
+
+
+    mensaje +=
+      "\n💰 *TOTAL: Bs " +
+      formatearPrecio(totalGeneral) +
+      "*";
+
+
+    mensaje +=
+      "\n\n¡Gracias por comprar en TOMATE IMPORTACIONES! ❤️";
+
+
+    const url =
+      "https://wa.me/" +
+      WHATSAPP_EMPRESA +
+      "?text=" +
+      encodeURIComponent(mensaje);
+
+
+    window.location.href = url;
+
   }
 
 
-  mensaje +=
-    "%0A🛍️ *PRODUCTOS:*%0A";
+  /* ==========================================================
+     SEGUIR COMPRANDO
+  ========================================================== */
+
+  function seguirComprando() {
+
+    window.location.href =
+      URL_PRODUCTOS;
+
+  }
 
 
-  let total = 0;
+  /* ==========================================================
+     LIMPIAR PARÁMETROS DE LA URL
+  ========================================================== */
 
+  function limpiarURL() {
 
-  carrito.forEach(
-    function(producto){
+    try {
 
-      const precio =
-        usaMayorista
-        ? Number(
-            producto.mayorista
-          )
-        : Number(
-            producto.unitario
-          );
-
-
-      const subtotal =
-        precio *
-        Number(
-          producto.cantidad
+      const url =
+        new URL(
+          window.location.href
         );
 
 
-      total +=
-        subtotal;
+      url.search = "";
 
 
-      mensaje +=
-        "• " +
-        encodeURIComponent(
-          producto.nombre
-        ) +
-        " x" +
-        producto.cantidad +
-        " — Bs " +
-        subtotal.toFixed(2) +
-        "%0A";
+      window.history.replaceState(
+        {},
+        document.title,
+        url.pathname
+      );
+
+    } catch (error) {
+
+      console.warn(
+        "No se pudo limpiar la URL.",
+        error
+      );
 
     }
-  );
-
-
-  mensaje +=
-    "%0A";
-
-
-  if(
-    usaMayorista
-  ){
-
-    const totales =
-      calcularTotales();
-
-
-    const ahorro =
-      totales.unitario -
-      totales.mayorista;
-
-
-    mensaje +=
-      "🏷️ *PRECIO MAYORISTA ACTIVADO*%0A";
-
-
-    mensaje +=
-      "💸 *AHORRO: Bs " +
-      ahorro.toFixed(2) +
-      "*%0A";
-
-  }else{
-
-    mensaje +=
-      "🏷️ Precio unitario aplicado%0A";
 
   }
 
 
-  mensaje +=
-    "💰 *TOTAL: Bs " +
-    total.toFixed(2) +
-    "*%0A";
+  /* ==========================================================
+     INDICADOR DE ACTUALIZACIÓN
+  ========================================================== */
+
+  function mostrarIndicadorActualizacion() {
+
+    document
+      .getElementById("actualizando")
+      .classList.remove("oculto");
+
+  }
 
 
-  const url =
-    "https://wa.me/" +
-    NUMERO_WHATSAPP +
-    "?text=" +
-    mensaje;
+  function ocultarIndicadorActualizacion() {
+
+    document
+      .getElementById("actualizando")
+      .classList.add("oculto");
+
+  }
 
 
-  window.location.href =
-    url;
+  /* ==========================================================
+     FORMATO DE PRECIOS
+  ========================================================== */
 
-}
+  function formatearPrecio(valor) {
+
+    const numero =
+      Number(valor);
 
 
-// =====================================================
-// INICIO
-// =====================================================
+    if (isNaN(numero)) {
+      return "0";
+    }
 
-renderizarCarrito();
 
-obtenerProductoInicial();
+    return numero.toLocaleString(
+      "es-BO",
+      {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }
+    );
+
+  }
+
+
+  /* ==========================================================
+     SEGURIDAD HTML
+  ========================================================== */
+
+  function escaparHTML(texto) {
+
+    return String(texto)
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
 
 </script>
 
-
 </body>
-
 </html>
