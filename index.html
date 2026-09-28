@@ -5,13 +5,9 @@
 
 <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>TOMATE IMPORTACIONES S.R.L.</title>
-
 
 <style>
 
@@ -229,7 +225,7 @@ button{
 
 .cargando{
   text-align:center;
-  padding:35px 10px;
+  padding:40px 10px;
   font-size:18px;
   color:#9b0000;
   font-weight:bold;
@@ -465,22 +461,34 @@ const URL_APPS_SCRIPT =
   "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec";
 
 
+// =====================================================
+// CARRITO
+// =====================================================
+
+let carrito = [];
+
+try{
+
+  carrito =
+    JSON.parse(
+      localStorage.getItem(
+        CLAVE_CARRITO
+      ) || "[]"
+    );
+
+  if(!Array.isArray(carrito)){
+    carrito = [];
+  }
+
+}catch(error){
+
+  carrito = [];
+
+}
+
 
 // =====================================================
-// CARGAR CARRITO GUARDADO
-// =====================================================
-
-let carrito =
-  JSON.parse(
-    localStorage.getItem(
-      CLAVE_CARRITO
-    ) || "[]"
-  );
-
-
-
-// =====================================================
-// GUARDAR CARRITO
+// GUARDAR
 // =====================================================
 
 function guardarCarrito(){
@@ -493,9 +501,8 @@ function guardarCarrito(){
 }
 
 
-
 // =====================================================
-// OBTENER PRODUCTO DESDE URL
+// OBTENER PRODUCTO INICIAL
 // =====================================================
 
 function obtenerProductoInicial(){
@@ -510,25 +517,19 @@ function obtenerProductoInicial(){
     parametros.get("codigo");
 
 
-  // ---------------------------------------------------
-  // NUEVO SISTEMA: PRODUCTO POR CÓDIGO
-  // ---------------------------------------------------
-
+  // NUEVO SISTEMA
   if(codigo){
 
-    cargarProductoPorCodigo(codigo);
+    cargarProductoPorCodigo(
+      codigo
+    );
 
     return;
 
   }
 
 
-  // ---------------------------------------------------
-  // SISTEMA ANTERIOR
-  // Se mantiene para que los enlaces viejos
-  // sigan funcionando.
-  // ---------------------------------------------------
-
+  // SISTEMA ANTIGUO
   const nombre =
     parametros.get("nombre");
 
@@ -568,38 +569,59 @@ function obtenerProductoInicial(){
 }
 
 
-
 // =====================================================
-// CARGAR PRODUCTO ACTUAL DESDE GOOGLE APPS SCRIPT
+// CARGAR PRODUCTO DESDE GOOGLE APPS SCRIPT
 // =====================================================
 
-function cargarProductoPorCodigo(codigo){
+function cargarProductoPorCodigo(
+  codigo
+){
 
-  document.getElementById("carrito").innerHTML =
+  const contenedor =
+    document.getElementById(
+      "carrito"
+    );
+
+
+  contenedor.innerHTML =
     '<div class="cargando">🔄 Cargando producto...</div>';
 
+
+  // IMPORTANTE:
+  // Esta función debe existir ANTES
+  // de cargar el script JSONP.
 
   window.recibirProductoCarrito =
     function(datos){
 
+      console.log(
+        "Respuesta recibida:",
+        datos
+      );
+
+
       if(
         datos &&
-        datos.encontrado
+        datos.encontrado === true
       ){
 
         agregarProductoAlCarrito({
 
-          codigo:datos.codigo,
+          codigo:
+            datos.codigo,
 
-          producto:datos.producto,
+          producto:
+            datos.producto,
 
-          unitario:Number(
-            datos.unitario
-          ),
+          unitario:
+            Number(
+              datos.unitario
+            ),
 
-          mayorista:Number(
-            datos.mayorista
-          )
+          mayorista:
+            Number(
+              datos.mayorista
+            )
 
         });
 
@@ -609,7 +631,7 @@ function cargarProductoPorCodigo(codigo){
 
       }else{
 
-        document.getElementById("carrito").innerHTML =
+        contenedor.innerHTML =
           '<div class="vacio">Producto no encontrado.</div>';
 
       }
@@ -618,56 +640,85 @@ function cargarProductoPorCodigo(codigo){
 
 
   const script =
-    document.createElement("script");
+    document.createElement(
+      "script"
+    );
+
+
+  script.type =
+    "text/javascript";
 
 
   script.src =
     URL_APPS_SCRIPT +
     "?accion=precio" +
     "&codigo=" +
-    encodeURIComponent(codigo) +
+    encodeURIComponent(
+      codigo
+    ) +
     "&callback=recibirProductoCarrito" +
-    "&_=" +
+    "&nocache=" +
     Date.now();
+
+
+  script.onload =
+    function(){
+
+      console.log(
+        "Solicitud enviada correctamente."
+      );
+
+    };
 
 
   script.onerror =
     function(){
 
-      document.getElementById("carrito").innerHTML =
-        '<div class="vacio">No se pudo cargar el producto.</div>';
+      contenedor.innerHTML =
+        '<div class="vacio">No se pudo conectar con el servidor de precios.</div>';
 
     };
 
 
-  document.body.appendChild(script);
+  document
+    .getElementsByTagName(
+      "head"
+    )[0]
+    .appendChild(
+      script
+    );
 
 }
 
 
-
 // =====================================================
-// AGREGAR PRODUCTO AL CARRITO
+// AGREGAR PRODUCTO
 // =====================================================
 
-function agregarProductoAlCarrito(producto){
+function agregarProductoAlCarrito(
+  producto
+){
 
   const existente =
     carrito.find(
-      p => {
+      function(p){
 
         if(
           producto.codigo &&
           p.codigo
         ){
 
-          return String(p.codigo) ===
-                 String(producto.codigo);
+          return String(
+            p.codigo
+          ) === String(
+            producto.codigo
+          );
 
         }
 
+
         return p.nombre ===
-               producto.producto;
+          producto.producto;
 
       }
     );
@@ -675,8 +726,8 @@ function agregarProductoAlCarrito(producto){
 
   if(existente){
 
-    // Actualizar los precios con los datos
-    // actuales de Google Sheet.
+    // ACTUALIZA SIEMPRE LOS PRECIOS
+    // CON LOS DATOS ACTUALES
 
     existente.nombre =
       producto.producto;
@@ -685,10 +736,14 @@ function agregarProductoAlCarrito(producto){
       producto.codigo;
 
     existente.unitario =
-      producto.unitario;
+      Number(
+        producto.unitario
+      );
 
     existente.mayorista =
-      producto.mayorista;
+      Number(
+        producto.mayorista
+      );
 
     existente.cantidad++;
 
@@ -703,10 +758,14 @@ function agregarProductoAlCarrito(producto){
         producto.producto,
 
       unitario:
-        producto.unitario,
+        Number(
+          producto.unitario
+        ),
 
       mayorista:
-        producto.mayorista,
+        Number(
+          producto.mayorista
+        ),
 
       cantidad:1
 
@@ -722,9 +781,8 @@ function agregarProductoAlCarrito(producto){
 }
 
 
-
 // =====================================================
-// LIMPIAR PARÁMETROS DE LA URL
+// LIMPIAR URL
 // =====================================================
 
 function limpiarURL(){
@@ -738,7 +796,6 @@ function limpiarURL(){
 }
 
 
-
 // =====================================================
 // CANTIDAD TOTAL
 // =====================================================
@@ -746,17 +803,22 @@ function limpiarURL(){
 function calcularCantidadTotal(){
 
   return carrito.reduce(
-    (total,p) =>
-      total + p.cantidad,
+    function(total,p){
+
+      return total +
+        Number(
+          p.cantidad
+        );
+
+    },
     0
   );
 
 }
 
 
-
 // =====================================================
-// CALCULAR TOTALES
+// TOTALES
 // =====================================================
 
 function calcularTotales(){
@@ -767,16 +829,24 @@ function calcularTotales(){
 
 
   carrito.forEach(
-    producto => {
+    function(producto){
 
       totalUnitario +=
-        producto.unitario *
-        producto.cantidad;
+        Number(
+          producto.unitario
+        ) *
+        Number(
+          producto.cantidad
+        );
 
 
       totalMayorista +=
-        producto.mayorista *
-        producto.cantidad;
+        Number(
+          producto.mayorista
+        ) *
+        Number(
+          producto.cantidad
+        );
 
     }
   );
@@ -793,7 +863,6 @@ function calcularTotales(){
   };
 
 }
-
 
 
 // =====================================================
@@ -864,10 +933,7 @@ function renderizarCarrito(){
     totales.mayorista;
 
 
-
-  // ---------------------------------------------------
-  // MENSAJE MAYORISTA
-  // ---------------------------------------------------
+  // MAYORISTA
 
   if(usaMayorista){
 
@@ -895,7 +961,8 @@ function renderizarCarrito(){
   }else{
 
     const faltan =
-      3 - cantidadTotal;
+      3 -
+      cantidadTotal;
 
 
     estadoMayorista.innerHTML = `
@@ -903,8 +970,12 @@ function renderizarCarrito(){
       <div class="mensaje-mayorista">
 
         🔔 Te faltan
-        <strong>${faltan}</strong>
+        <strong>
+          ${faltan}
+        </strong>
+
         unidad${faltan === 1 ? "" : "es"}
+
         para activar el precio mayorista.
 
       </div>
@@ -914,10 +985,7 @@ function renderizarCarrito(){
   }
 
 
-
-  // ---------------------------------------------------
   // PRODUCTOS
-  // ---------------------------------------------------
 
   let html = "";
 
@@ -925,18 +993,23 @@ function renderizarCarrito(){
 
 
   carrito.forEach(
-    (producto,index) => {
-
+    function(producto,index){
 
       const precioAplicado =
         usaMayorista
-        ? producto.mayorista
-        : producto.unitario;
+        ? Number(
+            producto.mayorista
+          )
+        : Number(
+            producto.unitario
+          );
 
 
       const subtotal =
         precioAplicado *
-        producto.cantidad;
+        Number(
+          producto.cantidad
+        );
 
 
       totalAplicado +=
@@ -946,7 +1019,6 @@ function renderizarCarrito(){
       html += `
 
         <div class="producto">
-
 
           <h3>
             ${producto.nombre}
@@ -983,22 +1055,15 @@ function renderizarCarrito(){
             : ""
           }">
 
-
             ${
               usaMayorista
               ? "🏷️ Precio mayorista aplicado:"
               : "Precio aplicado:"
             }
 
-
             <strong>
-
-              Bs ${Number(
-                precioAplicado
-              ).toFixed(2)}
-
+              Bs ${precioAplicado.toFixed(2)}
             </strong>
-
 
           </div>
 
@@ -1008,11 +1073,7 @@ function renderizarCarrito(){
             Subtotal:
 
             <strong>
-
-              Bs ${Number(
-                subtotal
-              ).toFixed(2)}
-
+              Bs ${subtotal.toFixed(2)}
             </strong>
 
           </div>
@@ -1025,16 +1086,12 @@ function renderizarCarrito(){
               class="btn-cantidad"
               onclick="cambiarCantidad(${index},-1)"
             >
-
               −
-
             </button>
 
 
             <span class="cantidad">
-
               ${producto.cantidad}
-
             </span>
 
 
@@ -1042,9 +1099,7 @@ function renderizarCarrito(){
               class="btn-cantidad"
               onclick="cambiarCantidad(${index},1)"
             >
-
               +
-
             </button>
 
 
@@ -1052,9 +1107,7 @@ function renderizarCarrito(){
               class="btn-eliminar"
               onclick="eliminarProducto(${index})"
             >
-
               Eliminar
-
             </button>
 
 
@@ -1076,12 +1129,10 @@ function renderizarCarrito(){
   document.getElementById(
     "total"
   ).innerHTML =
-
     "TOTAL: Bs " +
     totalAplicado.toFixed(2);
 
 }
-
 
 
 // =====================================================
@@ -1093,4 +1144,404 @@ function cambiarCantidad(
   cambio
 ){
 
-  carrito[index]()
+  if(!carrito[index]){
+    return;
+  }
+
+
+  carrito[index].cantidad +=
+    cambio;
+
+
+  if(
+    carrito[index].cantidad <= 0
+  ){
+
+    carrito.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  guardarCarrito();
+
+  renderizarCarrito();
+
+}
+
+
+// =====================================================
+// ELIMINAR
+// =====================================================
+
+function eliminarProducto(
+  index
+){
+
+  carrito.splice(
+    index,
+    1
+  );
+
+
+  guardarCarrito();
+
+  renderizarCarrito();
+
+}
+
+
+// =====================================================
+// VACIAR
+// =====================================================
+
+function vaciarCarrito(){
+
+  if(
+    confirm(
+      "¿Quieres vaciar todo el carrito?"
+    )
+  ){
+
+    carrito = [];
+
+    guardarCarrito();
+
+    renderizarCarrito();
+
+  }
+
+}
+
+
+// =====================================================
+// DELIVERY
+// =====================================================
+
+function mostrarDelivery(){
+
+  const opcion =
+    document.querySelector(
+      'input[name="entrega"]:checked'
+    );
+
+
+  const datos =
+    document.getElementById(
+      "datosDelivery"
+    );
+
+
+  if(
+    opcion &&
+    opcion.value === "Delivery"
+  ){
+
+    datos.classList.remove(
+      "oculto"
+    );
+
+  }else{
+
+    datos.classList.add(
+      "oculto"
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// FINALIZAR PEDIDO
+// =====================================================
+
+function finalizarPedido(){
+
+  if(
+    carrito.length === 0
+  ){
+
+    alert(
+      "El carrito está vacío."
+    );
+
+    return;
+
+  }
+
+
+  const nombre =
+    document
+      .getElementById(
+        "nombreCliente"
+      )
+      .value
+      .trim();
+
+
+  const whatsapp =
+    document
+      .getElementById(
+        "whatsappCliente"
+      )
+      .value
+      .trim();
+
+
+  const opcion =
+    document.querySelector(
+      'input[name="entrega"]:checked'
+    );
+
+
+  if(!nombre){
+
+    alert(
+      "Por favor, coloca tu nombre."
+    );
+
+    return;
+
+  }
+
+
+  if(!whatsapp){
+
+    alert(
+      "Por favor, coloca tu número de WhatsApp."
+    );
+
+    return;
+
+  }
+
+
+  if(!opcion){
+
+    alert(
+      "Por favor, selecciona el método de entrega."
+    );
+
+    return;
+
+  }
+
+
+  let direccion = "";
+
+  let referencia = "";
+
+
+  if(
+    opcion.value === "Delivery"
+  ){
+
+    direccion =
+      document
+        .getElementById(
+          "direccion"
+        )
+        .value
+        .trim();
+
+
+    referencia =
+      document
+        .getElementById(
+          "referencia"
+        )
+        .value
+        .trim();
+
+
+    if(!direccion){
+
+      alert(
+        "Por favor, coloca tu dirección."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  const cantidadTotal =
+    calcularCantidadTotal();
+
+
+  const usaMayorista =
+    cantidadTotal >= 3;
+
+
+  let mensaje =
+    "🛒 *NUEVO PEDIDO - TOMATE IMPORTACIONES S.R.L.*%0A%0A";
+
+
+  mensaje +=
+    "👤 *Cliente:* " +
+    encodeURIComponent(
+      nombre
+    ) +
+    "%0A";
+
+
+  mensaje +=
+    "📱 *WhatsApp:* " +
+    encodeURIComponent(
+      whatsapp
+    ) +
+    "%0A";
+
+
+  mensaje +=
+    "🚚 *Entrega:* " +
+    encodeURIComponent(
+      opcion.value
+    ) +
+    "%0A";
+
+
+  if(
+    opcion.value === "Delivery"
+  ){
+
+    mensaje +=
+      "📍 *Dirección:* " +
+      encodeURIComponent(
+        direccion
+      ) +
+      "%0A";
+
+
+    if(referencia){
+
+      mensaje +=
+        "📌 *Referencia:* " +
+        encodeURIComponent(
+          referencia
+        ) +
+        "%0A";
+
+    }
+
+  }
+
+
+  mensaje +=
+    "%0A🛍️ *PRODUCTOS:*%0A";
+
+
+  let total = 0;
+
+
+  carrito.forEach(
+    function(producto){
+
+      const precio =
+        usaMayorista
+        ? Number(
+            producto.mayorista
+          )
+        : Number(
+            producto.unitario
+          );
+
+
+      const subtotal =
+        precio *
+        Number(
+          producto.cantidad
+        );
+
+
+      total +=
+        subtotal;
+
+
+      mensaje +=
+        "• " +
+        encodeURIComponent(
+          producto.nombre
+        ) +
+        " x" +
+        producto.cantidad +
+        " — Bs " +
+        subtotal.toFixed(2) +
+        "%0A";
+
+    }
+  );
+
+
+  mensaje +=
+    "%0A";
+
+
+  if(
+    usaMayorista
+  ){
+
+    const totales =
+      calcularTotales();
+
+
+    const ahorro =
+      totales.unitario -
+      totales.mayorista;
+
+
+    mensaje +=
+      "🏷️ *PRECIO MAYORISTA ACTIVADO*%0A";
+
+
+    mensaje +=
+      "💸 *AHORRO: Bs " +
+      ahorro.toFixed(2) +
+      "*%0A";
+
+  }else{
+
+    mensaje +=
+      "🏷️ Precio unitario aplicado%0A";
+
+  }
+
+
+  mensaje +=
+    "💰 *TOTAL: Bs " +
+    total.toFixed(2) +
+    "*%0A";
+
+
+  const url =
+    "https://wa.me/" +
+    NUMERO_WHATSAPP +
+    "?text=" +
+    mensaje;
+
+
+  window.location.href =
+    url;
+
+}
+
+
+// =====================================================
+// INICIO
+// =====================================================
+
+renderizarCarrito();
+
+obtenerProductoInicial();
+
+</script>
+
+
+</body>
+
+</html>
