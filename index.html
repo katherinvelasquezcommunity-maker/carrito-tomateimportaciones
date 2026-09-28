@@ -340,12 +340,24 @@ button{
 
 <script>
 
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
 const CLAVE_CARRITO = "tomate_carrito";
 
 const NUMERO_WHATSAPP = "59163336796";
 
-const URL_APPS_SCRIPT =
-"https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec";
+/*
+   ID DE TU GOOGLE SHEET
+*/
+const ID_GOOGLE_SHEET =
+"1XKYCHe76ACgqMxuI2pZabAKOC-s2ZudrzL4cGhRzS8g";
+
+
+/* =========================================================
+   CARRITO
+   ========================================================= */
 
 let carrito = JSON.parse(
   localStorage.getItem(CLAVE_CARRITO) || "[]"
@@ -358,11 +370,14 @@ let carrito = JSON.parse(
 
 function obtenerProductoInicial(){
 
-  const parametros = new URLSearchParams(
-    window.location.search
-  );
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
 
-  const codigo = parametros.get("codigo");
+  const codigo =
+    parametros.get("codigo");
+
 
   if(!codigo){
 
@@ -372,89 +387,280 @@ function obtenerProductoInicial(){
 
   }
 
+
   const contenedor =
     document.getElementById("carrito");
+
 
   contenedor.innerHTML =
     '<div class="vacio">🔄 Cargando producto...</div>';
 
 
-  window.recibirProductoCarrito =
+  /*
+     Esta función recibe directamente
+     la respuesta de Google Sheets.
+  */
+
+  window.recibirProductoDesdeSheet =
   function(datos){
 
     console.log(
-      "Respuesta recibida:",
+      "Respuesta Google Sheets:",
       datos
     );
 
 
-    if(
-      !datos ||
-      datos.encontrado !== true
-    ){
+    try{
 
-      contenedor.innerHTML =
-        '<div class="vacio">Producto no encontrado.</div>';
+      /*
+        Google devuelve la respuesta
+        dentro de un objeto.
+      */
 
-      return;
+      const texto =
+        typeof datos === "string"
+        ? datos
+        : JSON.stringify(datos);
 
-    }
+
+      /*
+        Buscamos las filas recibidas.
+      */
+
+      let filas = [];
 
 
-    const existente =
-      carrito.find(
-        p =>
-        String(p.codigo) ===
-        String(datos.codigo)
+      if(
+        datos &&
+        datos.table &&
+        datos.table.rows
+      ){
+
+        filas =
+          datos.table.rows;
+
+      }
+
+
+      /*
+        Si no encontramos filas,
+        mostramos error.
+      */
+
+      if(
+        !filas ||
+        filas.length === 0
+      ){
+
+        contenedor.innerHTML =
+          '<div class="vacio">Producto no encontrado.</div>';
+
+        return;
+
+      }
+
+
+      let productoEncontrado =
+        null;
+
+
+      /*
+        Cada fila de Google Sheets
+        tiene sus celdas.
+      */
+
+      filas.forEach(
+        function(fila){
+
+          if(
+            !fila ||
+            !fila.c
+          ){
+            return;
+          }
+
+
+          const celdas =
+            fila.c;
+
+
+          const codigoFila =
+            celdas[0] &&
+            celdas[0].v != null
+            ? String(celdas[0].v).trim()
+            : "";
+
+
+          const nombreFila =
+            celdas[1] &&
+            celdas[1].v != null
+            ? String(celdas[1].v).trim()
+            : "";
+
+
+          const unitarioFila =
+            celdas[2] &&
+            celdas[2].v != null
+            ? Number(celdas[2].v)
+            : NaN;
+
+
+          const mayoristaFila =
+            celdas[3] &&
+            celdas[3].v != null
+            ? Number(celdas[3].v)
+            : NaN;
+
+
+          if(
+            codigoFila === String(codigo).trim()
+          ){
+
+            productoEncontrado = {
+
+              codigo:codigoFila,
+
+              producto:nombreFila,
+
+              unitario:unitarioFila,
+
+              mayorista:mayoristaFila
+
+            };
+
+          }
+
+        }
       );
 
 
-    if(existente){
+      /*
+        Si no encontramos el código.
+      */
 
-      existente.cantidad++;
+      if(!productoEncontrado){
 
-    }else{
+        contenedor.innerHTML =
+          '<div class="vacio">Producto no encontrado.</div>';
 
-      carrito.push({
+        return;
 
-        codigo:datos.codigo,
+      }
 
-        nombre:datos.producto,
 
-        unitario:Number(
-          datos.unitario
-        ),
+      /*
+        Validamos precios.
+      */
 
-        mayorista:Number(
-          datos.mayorista
-        ),
+      if(
+        !Number.isFinite(
+          productoEncontrado.unitario
+        ) ||
+        !Number.isFinite(
+          productoEncontrado.mayorista
+        )
+      ){
 
-        cantidad:1
+        contenedor.innerHTML =
+          '<div class="vacio">Los precios de este producto no son válidos.</div>';
 
-      });
+        return;
+
+      }
+
+
+      /*
+        Buscamos si el producto
+        ya está en el carrito.
+      */
+
+      const existente =
+        carrito.find(
+          p =>
+          String(p.codigo) ===
+          String(productoEncontrado.codigo)
+        );
+
+
+      if(existente){
+
+        existente.cantidad++;
+
+        /*
+          Actualizamos precios por si
+          cambiaron en Google Sheets.
+        */
+
+        existente.nombre =
+          productoEncontrado.producto;
+
+        existente.unitario =
+          productoEncontrado.unitario;
+
+        existente.mayorista =
+          productoEncontrado.mayorista;
+
+      }else{
+
+        carrito.push({
+
+          codigo:
+            productoEncontrado.codigo,
+
+          nombre:
+            productoEncontrado.producto,
+
+          unitario:
+            productoEncontrado.unitario,
+
+          mayorista:
+            productoEncontrado.mayorista,
+
+          cantidad:1
+
+        });
+
+      }
+
+
+      guardarCarrito();
+
+      renderizarCarrito();
+
+
+      /*
+        Quitamos ?codigo=...
+        de la URL para evitar duplicar
+        el producto al actualizar.
+      */
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+
+
+    }catch(error){
+
+      console.error(
+        "Error procesando Google Sheets:",
+        error
+      );
+
+
+      contenedor.innerHTML =
+        '<div class="vacio">No se pudo cargar el producto.</div>';
 
     }
 
-
-    guardarCarrito();
-
-    renderizarCarrito();
-
-
-    /*
-      Quitamos el código de la URL
-      después de cargarlo para evitar
-      duplicarlo al actualizar la página.
-    */
-
-    window.history.replaceState(
-      {},
-      document.title,
-      window.location.pathname
-    );
-
   };
 
+
+  /*
+     Creamos la conexión JSONP
+     directamente con Google Sheets.
+  */
 
   const script =
     document.createElement("script");
@@ -465,11 +671,20 @@ function obtenerProductoInicial(){
 
 
   script.src =
-    URL_APPS_SCRIPT +
-    "?accion=precio" +
-    "&codigo=" +
-    encodeURIComponent(codigo) +
-    "&callback=recibirProductoCarrito" +
+    "https://docs.google.com/spreadsheets/d/" +
+    ID_GOOGLE_SHEET +
+    "/gviz/tq" +
+    "?tqx=responseHandler:recibirProductoDesdeSheet" +
+    "&tq=" +
+    encodeURIComponent(
+      "select A,B,C,D where A = '" +
+      String(codigo).replace(
+        /'/g,
+        "''"
+      ) +
+      "'"
+    ) +
+    "&headers=1" +
     "&nocache=" +
     Date.now();
 
@@ -478,7 +693,7 @@ function obtenerProductoInicial(){
   function(){
 
     console.log(
-      "Solicitud de producto enviada."
+      "Solicitud enviada a Google Sheets."
     );
 
   };
@@ -486,6 +701,11 @@ function obtenerProductoInicial(){
 
   script.onerror =
   function(){
+
+    console.error(
+      "No se pudo conectar con Google Sheets."
+    );
+
 
     contenedor.innerHTML =
       '<div class="vacio">No se pudo conectar con el servidor de precios.</div>';
