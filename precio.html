@@ -25,14 +25,12 @@ body {
   margin: 0;
   padding: 0;
   line-height: 18px;
-  font-family: "Merriweather", Georgia, serif;
   font-size: 14px;
   font-weight: 700;
   color: #000000;
 }
 
 .numero {
-  font-family: "Merriweather", Georgia, serif;
   font-size: 16px;
   font-weight: 700;
   color: #d71920;
@@ -57,50 +55,46 @@ body {
 
 <script>
 
-var parametros = new URLSearchParams(window.location.search);
-
-var codigo = parametros.get("codigo");
-
-var unitario = document.getElementById("unitario");
-var mayorista = document.getElementById("mayorista");
-
-
 window.recibirPrecio = function(datos) {
 
   if (datos && datos.encontrado) {
 
-    unitario.textContent = " Bs. " + datos.unitario;
+    document.getElementById("unitario").textContent =
+      " Bs. " + datos.unitario;
 
-    mayorista.textContent = " Bs. " + datos.mayorista;
+    document.getElementById("mayorista").textContent =
+      " Bs. " + datos.mayorista;
 
   } else {
 
-    unitario.textContent = "No disponible";
+    document.getElementById("unitario").textContent =
+      "No disponible";
 
-    mayorista.textContent = "No disponible";
+    document.getElementById("mayorista").textContent =
+      "No disponible";
 
   }
 
 };
 
+</script>
+
+
+<script id="conexionPrecio"></script>
+
+
+<script>
+
+var codigo =
+  new URLSearchParams(window.location.search).get("codigo");
 
 if (codigo) {
 
-  var script = document.createElement("script");
-
-  script.src =
+  document.getElementById("conexionPrecio").src =
     "https://script.google.com/macros/s/AKfycbx0V_7ievbxYu5OGNcjJf59M3LXRaJbrji67M5JPnWrFkZHI7Mxp7tGXEo4oTblzDV_4g/exec" +
     "?accion=precio" +
     "&codigo=" + encodeURIComponent(codigo) +
     "&callback=recibirPrecio";
-
-  document.body.appendChild(script);
-
-} else {
-
-  unitario.textContent = "Sin código";
-
-  mayorista.textContent = "Sin código";
 
 }
 
